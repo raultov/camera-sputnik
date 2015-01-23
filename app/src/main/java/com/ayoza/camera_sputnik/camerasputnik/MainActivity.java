@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
 
 
@@ -79,5 +81,16 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /** Called when the user clicks the Scan Devices button */
+    public void scanDevices(View view) {
+        Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
+
+        Intent intent = new Intent(this, BluetoothDevicesListActivity.class);
+        
+        
+        
+        
     }
 }

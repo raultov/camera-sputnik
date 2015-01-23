@@ -9,4 +9,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_camera_id" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scanDevicesButtonText"
+        android:id="@+id/scanDevicesButtonId"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:onClick="scanDevices"
+        android:enabled="true"
+        android:textColor="#fffcff75"
+        android:background="#ff0a11ff"
+        android:elevation="@dimen/abc_action_button_min_height_material"
+        android:elegantTextHeight="true"
+        android:longClickable="false" />
+
 </RelativeLayout>
