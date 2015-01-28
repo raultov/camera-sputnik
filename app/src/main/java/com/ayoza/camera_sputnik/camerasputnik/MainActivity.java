@@ -7,12 +7,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    public final static String EXTRA_MESSAGE = "com.ayoza.camera_sputnik.MESSAGE";
 
     private BluetoothMgr bluetoothMgr;
 
@@ -88,8 +91,9 @@ public class MainActivity extends ActionBarActivity {
         Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
 
         Intent intent = new Intent(this, BluetoothDevicesListActivity.class);
-        
-        
+        String message = "hola nueva ventanita";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
         
         
     }

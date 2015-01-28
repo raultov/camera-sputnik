@@ -20,6 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity"
+            android:label="Device List"
+            android:parentActivityName="com.ayoza.camera_sputnik.camerasputnik.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ayoza.camera_sputnik.camerasputnik.MainActivity" />
+        </activity>
+        
     </application>
 
 </manifest>
