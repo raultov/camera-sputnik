@@ -124,4 +124,8 @@ public class BluetoothMgr {
         }
     }
 
+    public Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
+
 }

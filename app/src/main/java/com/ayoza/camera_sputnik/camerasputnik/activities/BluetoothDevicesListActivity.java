@@ -29,7 +29,7 @@ public class BluetoothDevicesListActivity extends ActionBarActivity {
 
         // Create the text view
         TextView textView = new TextView(this);
-        textView.setTextSize(40);
+        textView.setTextSize(20);
         textView.setText(message);
 
         // Set the text view as the activity layout
@@ -51,6 +51,7 @@ public class BluetoothDevicesListActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
+    /*
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() { }
@@ -62,5 +63,5 @@ public class BluetoothDevicesListActivity extends ActionBarActivity {
             return rootView;
         }
     }
-    
+    */
 }
