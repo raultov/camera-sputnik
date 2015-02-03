@@ -14,12 +14,14 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     public static final String BLUETOOTH_DEVICE_ID = "_id";
     public static final String BLUETOOTH_DEVICE_NAME = "name";
     public static final String BLUETOOTH_DEVICE_MAC = "mac";
+    public static final String BLUETOOTH_DEVICE_PAIRED = "paired";
 
     // Database creation sql statement
     private static final String TABLE_BLUETOOTH_DEVICE_CREATE = "create table "
             + TABLE_BLUETOOTH_DEVICE + "(" + BLUETOOTH_DEVICE_ID
             + " integer primary key autoincrement, " + BLUETOOTH_DEVICE_NAME
-            + " text not null, " + BLUETOOTH_DEVICE_MAC + " text not null);";
+            + " text not null, " + BLUETOOTH_DEVICE_MAC + " text not null, "
+            +  BLUETOOTH_DEVICE_PAIRED + " integer not null);";
     
     public ConfigurationHelper(Context context) {
         super(context, GeneralHelper.DATABASE_NAME, null, GeneralHelper.DATABASE_VERSION);

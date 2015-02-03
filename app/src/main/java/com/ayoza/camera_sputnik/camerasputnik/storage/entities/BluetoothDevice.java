@@ -5,13 +5,14 @@ import java.io.Serializable;
 /**
  * Created by raul on 3/02/15.
  */
-public class BluetoothDevice implements Serializable {
+public class BluetoothDevice implements Serializable, Cloneable {
     
     public static final long serialVersionUID = -561615151681684L;
     
     private Long id;
     private String name;
     private String mac;
+    private Integer paired;
 
     public Long getId() {
         return id;
@@ -36,7 +37,24 @@ public class BluetoothDevice implements Serializable {
     public void setMac(String mac) {
         this.mac = mac;
     }
+
+    public Integer getPaired() {
+        return paired;
+    }
+
+    public void setPaired(Integer paired) {
+        this.paired = paired;
+    }
     
+    @Override
+    public BluetoothDevice clone() {
+        try {
+            return (BluetoothDevice) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+    }
+
     @Override
     public String toString() {
         return name + " - " + mac;

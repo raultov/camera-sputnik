@@ -24,8 +24,12 @@ public class ConfigurationDao {
     private SQLiteDatabase database;
     private ConfigurationHelper configurationHelper;
 
-    private String[] allColumnsBluetoothDevice = { ConfigurationHelper.BLUETOOTH_DEVICE_ID,
-            ConfigurationHelper.BLUETOOTH_DEVICE_NAME, ConfigurationHelper.BLUETOOTH_DEVICE_MAC };
+    private String[] allColumnsBluetoothDevice = { 
+            ConfigurationHelper.BLUETOOTH_DEVICE_ID,
+            ConfigurationHelper.BLUETOOTH_DEVICE_NAME, 
+            ConfigurationHelper.BLUETOOTH_DEVICE_MAC,
+            ConfigurationHelper.BLUETOOTH_DEVICE_PAIRED
+            };
 
     public ConfigurationDao(Context context) {
         configurationHelper = new ConfigurationHelper(context);
@@ -39,10 +43,11 @@ public class ConfigurationDao {
         configurationHelper.close();
     }
 
-    public BluetoothDevice createBluetoothDevice(String name, String mac) {
+    public BluetoothDevice createBluetoothDevice(String name, String mac, Boolean paired) {
         ContentValues values = new ContentValues();
         values.put(ConfigurationHelper.BLUETOOTH_DEVICE_NAME, name);
         values.put(ConfigurationHelper.BLUETOOTH_DEVICE_MAC, mac);
+        values.put(ConfigurationHelper.BLUETOOTH_DEVICE_PAIRED, paired);
         long insertId = database.insert(ConfigurationHelper.TABLE_BLUETOOTH_DEVICE, null,
                 values);
         
@@ -58,12 +63,12 @@ public class ConfigurationDao {
 
     public void deleteBluetoothDevice(BluetoothDevice bluetoothDevice) {
         long id = bluetoothDevice.getId();
-        Log.d(ConfigurationDao.class.getName(), "Comment deleted with id: " + id);
+        Log.d(ConfigurationDao.class.getName(), "Bluetooth Device deleted with id: " + id);
         database.delete(ConfigurationHelper.TABLE_BLUETOOTH_DEVICE, ConfigurationHelper.BLUETOOTH_DEVICE_ID
                 + " = " + id, null);
     }
 
-    public List<BluetoothDevice> getAllComments() {
+    public List<BluetoothDevice> getAllBluetoothDevices() {
         List<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
 
         Cursor cursor = database.query(ConfigurationHelper.TABLE_BLUETOOTH_DEVICE,
@@ -80,11 +85,24 @@ public class ConfigurationDao {
         return devices;
     }
 
+    /**
+     * Return the first paired BluetoothDevice existing in Database Configuration
+     *
+     * @return
+     */
+    public BluetoothDevice getFirstPairedBluetoothDevice() {
+        
+        // TODO
+        
+        return null; 
+    }
+
     private BluetoothDevice cursorToBluetoothDevice(Cursor cursor) {
         BluetoothDevice bluetoothDevice = new BluetoothDevice();
         bluetoothDevice.setId(cursor.getLong(0));
         bluetoothDevice.setName(cursor.getString(1));
         bluetoothDevice.setMac(cursor.getString(2));
+        bluetoothDevice.setPaired(cursor.getInt(3));
         return bluetoothDevice;
     }
 }

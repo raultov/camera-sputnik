@@ -7,6 +7,7 @@ package com.ayoza.camera_sputnik.camerasputnik.arduino.managers;
 import android.content.Context;
 
 import com.ayoza.camera_sputnik.camerasputnik.storage.dao.ConfigurationDao;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BluetoothDevice;
 
 /**
  * This class is responsible for creating and managing settings
@@ -28,6 +29,13 @@ public class ConfigurationMgr {
         }
 
         return instance;
+    }
+    
+    public BluetoothDevice getPairedBluetoothDevice() {
+        
+        // TODO
+        
+        return null;    
     }
     
     public ConfigurationDao getConfigurationDao() {
