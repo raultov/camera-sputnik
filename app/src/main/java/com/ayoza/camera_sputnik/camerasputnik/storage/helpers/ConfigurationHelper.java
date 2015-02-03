@@ -3,16 +3,17 @@ package com.ayoza.camera_sputnik.camerasputnik.storage.helpers;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by raul on 3/02/15.
  */
 public class ConfigurationHelper extends SQLiteOpenHelper {
 
-    private static final String TABLE_BLUETOOTH_DEVICE = "bluetooth_device";
-    private static final String BLUETOOTH_DEVICE_ID = "_id";
-    private static final String BLUETOOTH_DEVICE_NAME = "name";
-    private static final String BLUETOOTH_DEVICE_MAC = "mac";
+    public static final String TABLE_BLUETOOTH_DEVICE = "bluetooth_device";
+    public static final String BLUETOOTH_DEVICE_ID = "_id";
+    public static final String BLUETOOTH_DEVICE_NAME = "name";
+    public static final String BLUETOOTH_DEVICE_MAC = "mac";
 
     // Database creation sql statement
     private static final String TABLE_BLUETOOTH_DEVICE_CREATE = "create table "
@@ -32,7 +33,7 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        
+        db.execSQL(TABLE_BLUETOOTH_DEVICE_CREATE);
     }
 
     /**
@@ -57,6 +58,10 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        Log.w(ConfigurationHelper.class.getName(),
+                "Upgrading database from version " + oldVersion + " to "
+                        + newVersion + ", which will destroy all old data");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BLUETOOTH_DEVICE);
+        onCreate(db);
     }
 }

@@ -9,9 +9,17 @@ public class BluetoothDevice implements Serializable {
     
     public static final long serialVersionUID = -561615151681684L;
     
+    private Long id;
     private String name;
     private String mac;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
