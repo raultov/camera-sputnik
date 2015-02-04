@@ -37,10 +37,13 @@ public final class BluetoothMgr {
     private Boolean isBluetoothEnabled = null;
     private ConfigurationMgr configurationMgr;
     private static Context context;
+    private Boolean connected = false;
 
     private BluetoothMgr() {
 
         configurationMgr = ConfigurationMgr.getInstance(context);
+
+        final BDeviceSputnik bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
 
         mReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
@@ -52,17 +55,18 @@ public final class BluetoothMgr {
                     // Add the name and address to an array adapter to show in a ListView
 
                     try {
+                        if (bDeviceSputnik != null) {
+                            String name = bDeviceSputnik.getName();
 
-                        BDeviceSputnik bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
-                        String name = bDeviceSputnik.getName();
-                        
-                        if (device.getName().equals("CAMERABIKE")) {
-                            mBluetoothAdapter.cancelDiscovery();
-                            bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
-                            bs.connect();
+                            if (device.getName().equals(name)) {
+                                mBluetoothAdapter.cancelDiscovery();
+                                bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
+                                bs.connect();
+                                connected = true;
 
-                            OutputStream os = bs.getOutputStream();
-                            os.write("Hola Arduino!".getBytes());
+                                OutputStream os = bs.getOutputStream();
+                                os.write("Hola Arduino!".getBytes());
+                            }
                         }
                     } catch (IOException e) {
                         try {
@@ -94,6 +98,10 @@ public final class BluetoothMgr {
         } else {
             Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery no pudo comenzar");
         }
+    }
+
+    public Boolean getConnected() {
+        return connected;
     }
 
     public static BluetoothMgr getInstance(Context context) {

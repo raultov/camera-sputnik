@@ -32,7 +32,11 @@ public final class ConfigurationMgr {
     }
     
     public BDeviceSputnik getPairedBluetoothDevice() {
-        return configurationDao.getFirstPairedBluetoothDevice();
+        configurationDao.open();
+        BDeviceSputnik bDeviceSputnik = configurationDao.getFirstPairedBluetoothDevice();
+        configurationDao.close();
+        
+        return bDeviceSputnik;
     }
 
     public Object clone() throws CloneNotSupportedException {
