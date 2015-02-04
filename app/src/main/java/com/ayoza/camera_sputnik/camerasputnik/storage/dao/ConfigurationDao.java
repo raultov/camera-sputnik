@@ -7,10 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BluetoothDevice;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.helpers.ConfigurationHelper;
-
-import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +41,7 @@ public class ConfigurationDao {
         configurationHelper.close();
     }
 
-    public BluetoothDevice createBluetoothDevice(String name, String mac, Boolean paired) {
+    public BDeviceSputnik createBluetoothDevice(String name, String mac, Boolean paired) {
         ContentValues values = new ContentValues();
         values.put(ConfigurationHelper.BLUETOOTH_DEVICE_NAME, name);
         values.put(ConfigurationHelper.BLUETOOTH_DEVICE_MAC, mac);
@@ -56,28 +54,28 @@ public class ConfigurationDao {
                 ConfigurationHelper.BLUETOOTH_DEVICE_ID + " = " + insertId, null,
                 null, null, null);
         cursor.moveToFirst();
-        BluetoothDevice bluetoothDevice = cursorToBluetoothDevice(cursor);
+        BDeviceSputnik bDeviceSputnik = cursorToBluetoothDevice(cursor);
         cursor.close();
-        return bluetoothDevice;
+        return bDeviceSputnik;
     }
 
-    public void deleteBluetoothDevice(BluetoothDevice bluetoothDevice) {
-        long id = bluetoothDevice.getId();
+    public void deleteBluetoothDevice(BDeviceSputnik bDeviceSputnik) {
+        long id = bDeviceSputnik.getId();
         Log.d(ConfigurationDao.class.getName(), "Bluetooth Device deleted with id: " + id);
         database.delete(ConfigurationHelper.TABLE_BLUETOOTH_DEVICE, ConfigurationHelper.BLUETOOTH_DEVICE_ID
                 + " = " + id, null);
     }
 
-    public List<BluetoothDevice> getAllBluetoothDevices() {
-        List<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
+    public List<BDeviceSputnik> getAllBluetoothDevices() {
+        List<BDeviceSputnik> devices = new ArrayList<BDeviceSputnik>();
 
         Cursor cursor = database.query(ConfigurationHelper.TABLE_BLUETOOTH_DEVICE,
                 allColumnsBluetoothDevice, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            BluetoothDevice bluetoothDevice = cursorToBluetoothDevice(cursor);
-            devices.add(bluetoothDevice);
+            BDeviceSputnik bDeviceSputnik = cursorToBluetoothDevice(cursor);
+            devices.add(bDeviceSputnik);
             cursor.moveToNext();
         }
         // make sure to close the cursor
@@ -86,23 +84,33 @@ public class ConfigurationDao {
     }
 
     /**
-     * Return the first paired BluetoothDevice existing in Database Configuration
+     * Return the first paired BDeviceSputnik existing in Database Configuration
      *
      * @return
      */
-    public BluetoothDevice getFirstPairedBluetoothDevice() {
+    public BDeviceSputnik getFirstPairedBluetoothDevice() {
+
+        BDeviceSputnik bDeviceSputnik = null;
+
+        Cursor cursor = database.query(ConfigurationHelper.TABLE_BLUETOOTH_DEVICE,
+                allColumnsBluetoothDevice, ConfigurationHelper.BLUETOOTH_DEVICE_PAIRED + "=1",
+                null, null, null, null);
+
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            bDeviceSputnik = cursorToBluetoothDevice(cursor);
+        }
+        cursor.close();
         
-        // TODO
-        
-        return null; 
+        return bDeviceSputnik;
     }
 
-    private BluetoothDevice cursorToBluetoothDevice(Cursor cursor) {
-        BluetoothDevice bluetoothDevice = new BluetoothDevice();
-        bluetoothDevice.setId(cursor.getLong(0));
-        bluetoothDevice.setName(cursor.getString(1));
-        bluetoothDevice.setMac(cursor.getString(2));
-        bluetoothDevice.setPaired(cursor.getInt(3));
-        return bluetoothDevice;
+    private BDeviceSputnik cursorToBluetoothDevice(Cursor cursor) {
+        BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
+        bDeviceSputnik.setId(cursor.getLong(0));
+        bDeviceSputnik.setName(cursor.getString(1));
+        bDeviceSputnik.setMac(cursor.getString(2));
+        bDeviceSputnik.setPaired(cursor.getInt(3));
+        return bDeviceSputnik;
     }
 }

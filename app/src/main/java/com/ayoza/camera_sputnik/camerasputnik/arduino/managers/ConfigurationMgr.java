@@ -7,19 +7,19 @@ package com.ayoza.camera_sputnik.camerasputnik.arduino.managers;
 import android.content.Context;
 
 import com.ayoza.camera_sputnik.camerasputnik.storage.dao.ConfigurationDao;
-import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BluetoothDevice;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
 /**
  * This class is responsible for creating and managing settings
  *
  */
-public class ConfigurationMgr {
+public final class ConfigurationMgr {
     
     private static ConfigurationMgr instance = null;
     private ConfigurationDao configurationDao;
     
     private ConfigurationMgr() {
-     
+
     }
 
     public static ConfigurationMgr getInstance(Context context) {
@@ -31,14 +31,12 @@ public class ConfigurationMgr {
         return instance;
     }
     
-    public BluetoothDevice getPairedBluetoothDevice() {
-        
-        // TODO
-        
-        return null;    
+    public BDeviceSputnik getPairedBluetoothDevice() {
+        return configurationDao.getFirstPairedBluetoothDevice();
     }
-    
-    public ConfigurationDao getConfigurationDao() {
-        return configurationDao;
+
+    public Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
     }
+
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by raul on 3/02/15.
  */
-public class BluetoothDevice implements Serializable, Cloneable {
+public class BDeviceSputnik implements Serializable, Cloneable {
     
     public static final long serialVersionUID = -561615151681684L;
     
@@ -47,9 +47,9 @@ public class BluetoothDevice implements Serializable, Cloneable {
     }
     
     @Override
-    public BluetoothDevice clone() {
+    public BDeviceSputnik clone() {
         try {
-            return (BluetoothDevice) super.clone();
+            return (BDeviceSputnik) super.clone();
         } catch (CloneNotSupportedException e) {
             return null;
         }

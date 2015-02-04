@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
@@ -22,7 +24,7 @@ import java.util.UUID;
  * This class is responsible for creating and managing connections between Arduino and Android
  *
  */
-public class BluetoothMgr {
+public final class BluetoothMgr {
 
     private static BluetoothMgr instance = null;
 
@@ -33,19 +35,27 @@ public class BluetoothMgr {
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothSocket bs = null;
     private Boolean isBluetoothEnabled = null;
+    private ConfigurationMgr configurationMgr;
+    private static Context context;
 
     private BluetoothMgr() {
+
+        configurationMgr = ConfigurationMgr.getInstance(context);
 
         mReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 // When discovery finds a device
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    // Get the BluetoothDevice object from the Intent
+                    // Get the BDeviceSputnik object from the Intent
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     // Add the name and address to an array adapter to show in a ListView
 
                     try {
+
+                        BDeviceSputnik bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
+                        String name = bDeviceSputnik.getName();
+                        
                         if (device.getName().equals("CAMERABIKE")) {
                             mBluetoothAdapter.cancelDiscovery();
                             bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
@@ -76,7 +86,7 @@ public class BluetoothMgr {
             isBluetoothEnabled = true;
         }
 
-        // FIXME aquí quizás debería de poner un if con isBluetoothEnabled para no lanzar
+        // FIXME creo que aquí debería de poner un if con isBluetoothEnabled para no lanzar
         // startDiscovery cuando el Bluetooth no está habilitado
         boolean ret = mBluetoothAdapter.startDiscovery();
         if (ret == true) {
@@ -86,7 +96,9 @@ public class BluetoothMgr {
         }
     }
 
-    public static BluetoothMgr getInstance() {
+    public static BluetoothMgr getInstance(Context context) {
+        BluetoothMgr.context = context;
+        
         if (instance == null) {
             instance = new BluetoothMgr();
         }
