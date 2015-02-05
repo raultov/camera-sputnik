@@ -1,6 +1,7 @@
 package com.ayoza.camera_sputnik.camerasputnik;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
@@ -18,11 +20,14 @@ public class MainActivity extends ActionBarActivity {
     public final static String EXTRA_MESSAGE = "com.ayoza.camera_sputnik.MESSAGE";
 
     private BluetoothMgr bluetoothMgr;
+    TextView bluetoothStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        
 
         bluetoothMgr = BluetoothMgr.getInstance(this);
 
@@ -36,7 +41,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -91,10 +95,15 @@ public class MainActivity extends ActionBarActivity {
         Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
 
         Intent intent = new Intent(this, BluetoothDevicesListActivity.class);
-        String message = "hola nueva ventanita";
+        String message = "hola nueva ventanita2";
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
-        
-        
+
+        if (bluetoothStatus == null) {
+            bluetoothStatus = (TextView) findViewById(R.id.bluetoothStatus);
+        }
+        bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
+        bluetoothStatus.setPadding(20, 20, 20, 20);
+        bluetoothStatus.setText("DESCONECTADO");
     }
 }

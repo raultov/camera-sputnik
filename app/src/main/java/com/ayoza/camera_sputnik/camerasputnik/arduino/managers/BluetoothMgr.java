@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
@@ -38,6 +39,7 @@ public final class BluetoothMgr {
     private ConfigurationMgr configurationMgr;
     private static Context context;
     private Boolean connected = false;
+    private TextView bluetoothStatus;
 
     private BluetoothMgr() {
 
