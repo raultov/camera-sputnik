@@ -27,8 +27,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        
-
         bluetoothMgr = BluetoothMgr.getInstance(this);
 
         if (!bluetoothMgr.isBluetoothEnabled()) {
@@ -36,6 +34,12 @@ public class MainActivity extends ActionBarActivity {
         }
 
         bluetoothMgr.registerReceiver(this);
+    }
+    
+    @Override
+    protected void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState.putString(KEY_TEXT_VALUE, mTextView.getText());
     }
 
     @Override
@@ -104,6 +108,6 @@ public class MainActivity extends ActionBarActivity {
         }
         bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
         bluetoothStatus.setPadding(20, 20, 20, 20);
-        bluetoothStatus.setText("DESCONECTADO");
+        bluetoothStatus.setText(getResources().getString(R.string.desconectado_str_es));
     }
 }
