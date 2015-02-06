@@ -8,5 +8,7 @@
     <string name="scanDevicesButtonText_es">Scan Devices</string>
     <string name="conectado_str_es">CONECTADO</string>
     <string name="desconectado_str_es">DESCONECTADO</string>
+    <string name="device_list_es">Lista de dispositivos</string>
+    <string name="Device1">Device 1</string>
 
 </resources>

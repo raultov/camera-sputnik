@@ -1,5 +1,6 @@
 package com.ayoza.camera_sputnik.camerasputnik.activities;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,24 +17,22 @@ import com.ayoza.camera_sputnik.camerasputnik.R;
 /**
  * Created by raul on 23/01/15.
  */
-public class BluetoothDevicesListActivity extends ActionBarActivity {
+public class BluetoothDevicesListActivity extends Activity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_devices_list);
+        
         // Get the message from the intent
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 
         // Create the text view
-        TextView textView = new TextView(this);
+        TextView textView = (TextView) findViewById(R.id.devicesListLabel);
         textView.setTextSize(20);
         textView.setText(message);
-
-        // Set the text view as the activity layout
-        setContentView(textView);
     }
 
     @Override
@@ -47,6 +46,7 @@ public class BluetoothDevicesListActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * A placeholder fragment containing a simple view.
