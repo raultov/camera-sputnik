@@ -77,6 +77,10 @@ public final class BluetoothMgr {
                         e.printStackTrace();
                         return;
                     }
+                } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+
+                    Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery terminó");
+                    
                 }
             }
         };
@@ -121,7 +125,9 @@ public final class BluetoothMgr {
     }
 
     public void registerReceiver(Activity activity) {
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         activity.registerReceiver(mReceiver, filter);
     }
 
