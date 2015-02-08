@@ -120,6 +120,5 @@ public class MainActivity extends ActionBarActivity {
         String message = "hola nueva ventanita2";
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
-
     }
 }

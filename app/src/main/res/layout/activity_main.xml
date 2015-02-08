@@ -27,7 +27,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/conectado_str_es"
         android:id="@+id/bluetoothStatus"
-        android:background="@drawable/rounded_corner_green"
+        android:background="@drawable/rounded_corner_red"
         android:textAlignment="center"
         android:padding="20dp"
         android:layout_alignParentTop="false"
