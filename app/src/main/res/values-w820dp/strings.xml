@@ -2,4 +2,5 @@
 <resources>
     <string name="conectado_str">CONECTADO</string>
     <string name="Device1">Device 1</string>
+    <string name="devices_list_es">Dispositivos detectados</string>
 </resources>
