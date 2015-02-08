@@ -15,10 +15,13 @@ import android.content.IntentFilter;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnDiscoveryFinishedListener;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -38,14 +41,16 @@ public final class BluetoothMgr {
     private Boolean isBluetoothEnabled = null;
     private ConfigurationMgr configurationMgr;
     private static Context context;
+    
     private Boolean connected = false;
-    private TextView bluetoothStatus;
+    private OnDiscoveryFinishedListener discoveryFinishedListener;
+    private List<BluetoothDevice> listDevicesFound;
 
     private BluetoothMgr() {
 
         configurationMgr = ConfigurationMgr.getInstance(context);
-
         final BDeviceSputnik bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
+        listDevicesFound = new ArrayList<BluetoothDevice>();
 
         mReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
@@ -56,6 +61,9 @@ public final class BluetoothMgr {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     // Add the name and address to an array adapter to show in a ListView
 
+                    // Store bluetooth device to be used later
+                    listDevicesFound.add(device);
+                    
                     try {
                         if (bDeviceSputnik != null) {
                             String name = bDeviceSputnik.getName();
@@ -78,8 +86,12 @@ public final class BluetoothMgr {
                         return;
                     }
                 } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-
                     Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery terminó");
+                    
+                    
+                    // TODO
+                    discoveryFinishedListener.onDiscoveryFinished(connected);
+                    
                     
                 }
             }
@@ -105,6 +117,11 @@ public final class BluetoothMgr {
             Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery no pudo comenzar");
         }
     }
+
+    public List<BluetoothDevice> getListDevicesFound() {
+        return listDevicesFound;
+    }
+
 
     public Boolean getConnected() {
         return connected;
@@ -150,6 +167,10 @@ public final class BluetoothMgr {
                 bs.close();
             } catch (IOException e) {}
         }
+    }
+
+    public void setDiscoveryFinishedListener(OnDiscoveryFinishedListener discoveryFinishedListener) {
+        this.discoveryFinishedListener = discoveryFinishedListener;
     }
 
     public Object clone() throws CloneNotSupportedException {

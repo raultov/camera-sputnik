@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
+import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnDiscoveryFinishedListener;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -33,7 +34,24 @@ public class MainActivity extends ActionBarActivity {
             bluetoothMgr.showBluetoothTurnOnRequest(this);
         }
 
+        bluetoothStatus = (TextView) findViewById(R.id.bluetoothStatus);
+
         bluetoothMgr.registerReceiver(this);
+
+        bluetoothMgr.setDiscoveryFinishedListener(new OnDiscoveryFinishedListener() {
+            @Override
+            public void onDiscoveryFinished(Boolean connected) {
+                if (connected == false) {
+                    bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
+                    bluetoothStatus.setPadding(20, 20, 20, 20);
+                    bluetoothStatus.setText(getResources().getString(R.string.desconectado_str_es));
+                } else {
+                    bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_green);
+                    bluetoothStatus.setPadding(20, 20, 20, 20);
+                    bluetoothStatus.setText(getResources().getString(R.string.conectado_str_es));
+                }
+            }
+        });
     }
     
     @Override
@@ -103,11 +121,5 @@ public class MainActivity extends ActionBarActivity {
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
 
-        if (bluetoothStatus == null) {
-            bluetoothStatus = (TextView) findViewById(R.id.bluetoothStatus);
-        }
-        bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
-        bluetoothStatus.setPadding(20, 20, 20, 20);
-        bluetoothStatus.setText(getResources().getString(R.string.desconectado_str_es));
     }
 }
