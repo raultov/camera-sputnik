@@ -2,4 +2,6 @@
 <resources>
     <color name="deactivated">#FFFCFF75</color>
     <color name="list_devices_activated">#FF0A11FF</color>
+    <color name="list_devices_text_activated">#FFFFF82F</color>
+    <color name="list_devices_text_deactivated">#ff5a595b</color>
 </resources>

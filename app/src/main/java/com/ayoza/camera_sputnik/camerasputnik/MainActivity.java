@@ -56,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
                     devicesScanButton.setClickable(true);
                     //devicesScanButton.setBackgroundColor(Color.argb(255,10,17,255));
                     devicesScanButton.setBackgroundColor(getResources().getColor(R.color.list_devices_activated));
+                    devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_activated));
                     //FF0A11FF
                 } else {
                     bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_green);
@@ -66,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
                     devicesScanButton.setClickable(false);
                     //devicesScanButton.setBackgroundColor(Color.argb(255,194,192,188));
                     devicesScanButton.setBackgroundColor(getResources().getColor(R.color.deactivated));
+                    devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_deactivated));
                     //FFC2C0BC
                 }
             }
