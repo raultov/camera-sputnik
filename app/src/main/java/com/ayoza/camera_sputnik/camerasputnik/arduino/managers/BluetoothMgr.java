@@ -39,7 +39,7 @@ public final class BluetoothMgr {
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothSocket bs = null;
     private Boolean isBluetoothEnabled = null;
-    private ConfigurationMgr configurationMgr;
+    private ConfigurationMgr configurationMgr = null;
     private static Context context;
     
     private Boolean connected = false;
@@ -48,8 +48,15 @@ public final class BluetoothMgr {
 
     private BluetoothMgr() {
 
-        configurationMgr = ConfigurationMgr.getInstance(context);
-        final BDeviceSputnik bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
+        final BDeviceSputnik bDeviceSputnik;
+
+        if (context != null) {
+            configurationMgr = ConfigurationMgr.getInstance(context);
+            bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
+        } else {
+            bDeviceSputnik = null;
+        }
+        
         listDevicesFound = new ArrayList<BluetoothDevice>();
 
         mReceiver = new BroadcastReceiver() {
@@ -63,7 +70,7 @@ public final class BluetoothMgr {
 
                     // Store bluetooth device to be used later
                     listDevicesFound.add(device);
-                    
+
                     try {
                         if (bDeviceSputnik != null) {
                             String name = bDeviceSputnik.getName();
@@ -87,12 +94,8 @@ public final class BluetoothMgr {
                     }
                 } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                     Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery terminó");
-                    
-                    
-                    // TODO
+
                     discoveryFinishedListener.onDiscoveryFinished(connected);
-                    
-                    
                 }
             }
         };
@@ -128,13 +131,16 @@ public final class BluetoothMgr {
     }
 
     public static BluetoothMgr getInstance(Context context) {
-        BluetoothMgr.context = context;
-        
         if (instance == null) {
+            BluetoothMgr.context = context;
             instance = new BluetoothMgr();
         }
 
         return instance;
+    }
+
+    public static BluetoothMgr getInstance() {
+        return getInstance(null);
     }
 
     public Boolean isBluetoothEnabled() {

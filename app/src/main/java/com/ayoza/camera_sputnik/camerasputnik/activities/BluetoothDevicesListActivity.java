@@ -2,6 +2,7 @@ package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -13,17 +14,24 @@ import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.MainActivity;
 import com.ayoza.camera_sputnik.camerasputnik.R;
+import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
+
+import java.util.List;
 
 /**
  * Created by raul on 23/01/15.
  */
 public class BluetoothDevicesListActivity extends Activity {
 
+    private BluetoothMgr bluetoothMgr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_devices_list);
+
+        bluetoothMgr = BluetoothMgr.getInstance();
+        List<BluetoothDevice> devicesFound = bluetoothMgr.getListDevicesFound();
         
         // Get the message from the intent
         Intent intent = getIntent();

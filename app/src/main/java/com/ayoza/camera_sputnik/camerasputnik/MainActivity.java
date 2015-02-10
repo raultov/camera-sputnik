@@ -1,5 +1,6 @@
 package com.ayoza.camera_sputnik.camerasputnik;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -18,11 +19,13 @@ import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
 import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnDiscoveryFinishedListener;
 
 import java.security.KeyStore;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
     public final static String EXTRA_MESSAGE = "com.ayoza.camera_sputnik.MESSAGE";
+    public final static String DEVICES_LIST = "com.ayoza.camera_sputnik.DEVICES_LIST";
 
     private BluetoothMgr bluetoothMgr;
     private TextView bluetoothStatus;
@@ -135,7 +138,6 @@ public class MainActivity extends ActionBarActivity {
     /** Called when the user clicks the Scan Devices button */
     public void scanDevices(View view) {
         Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
-
         Intent intent = new Intent(this, BluetoothDevicesListActivity.class);
         String message = "hola nueva ventanita2";
         intent.putExtra(EXTRA_MESSAGE, message);
