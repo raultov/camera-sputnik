@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -24,11 +24,11 @@
         <activity
             android:name="com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity"
             android:label="Device List"
-            android:parentActivityName="com.ayoza.camera_sputnik.camerasputnik.MainActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ayoza.camera_sputnik.camerasputnik.MainActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
         
     </application>

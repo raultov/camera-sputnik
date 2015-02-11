@@ -1,9 +1,6 @@
-package com.ayoza.camera_sputnik.camerasputnik;
+package com.ayoza.camera_sputnik.camerasputnik.activities;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,15 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity;
+import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
 import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnDiscoveryFinishedListener;
-
-import java.security.KeyStore;
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {

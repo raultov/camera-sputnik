@@ -1,20 +1,17 @@
 package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.ayoza.camera_sputnik.camerasputnik.MainActivity;
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
+
+import android.widget.LinearLayout.LayoutParams;
 
 import java.util.List;
 
@@ -41,6 +38,14 @@ public class BluetoothDevicesListActivity extends Activity {
         TextView textView = (TextView) findViewById(R.id.devicesListLabel);
         textView.setTextSize(20);
         textView.setText(message);
+
+        LayoutParams lparams = new LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        TextView tv=new TextView(this);
+        tv.setLayoutParams(lparams);
+        tv.setText("test");
+        LinearLayout m_vwJokeLayout=(LinearLayout) this.findViewById(R.id.linearDeviceList);
+        m_vwJokeLayout.addView(tv);
     }
 
     @Override
