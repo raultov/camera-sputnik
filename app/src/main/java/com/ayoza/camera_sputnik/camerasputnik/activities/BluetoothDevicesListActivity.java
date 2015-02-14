@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
+import com.ayoza.camera_sputnik.camerasputnik.views.ItemDeviceBluetooth;
 
 import android.widget.LinearLayout.LayoutParams;
 
@@ -38,14 +39,14 @@ public class BluetoothDevicesListActivity extends Activity {
         TextView textView = (TextView) findViewById(R.id.devicesListLabel);
         textView.setTextSize(20);
         textView.setText(message);
-
-        LayoutParams lparams = new LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        TextView tv=new TextView(this);
-        tv.setLayoutParams(lparams);
-        tv.setText("test");
+        
         LinearLayout m_vwJokeLayout=(LinearLayout) this.findViewById(R.id.linearDeviceList);
-        m_vwJokeLayout.addView(tv);
+        int i = 0;
+        for (BluetoothDevice bluetoothDevice : devicesFound) {
+            ItemDeviceBluetooth itemDeviceBluetooth = new ItemDeviceBluetooth(i, bluetoothDevice.getName(), this);
+            m_vwJokeLayout.addView(itemDeviceBluetooth);
+            i++;
+        }
     }
 
     @Override
