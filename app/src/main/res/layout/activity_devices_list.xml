@@ -28,23 +28,6 @@
         android:layout_alignParentEnd="false"
         android:layout_marginTop="70dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Large Text"
-            android:id="@+id/textView"
-            android:gravity="center"
-            android:textSize="22dp"
-            android:textColor="#ff000000"
-            android:paddingBottom="15dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/textView2"
-            android:gravity="center" />
     </LinearLayout>
 
 </RelativeLayout>

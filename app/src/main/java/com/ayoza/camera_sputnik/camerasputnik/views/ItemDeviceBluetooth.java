@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,7 +29,17 @@ public class ItemDeviceBluetooth extends TextView {
         this.setTextSize(25.0f);
         this.setTextColor(Color.BLACK);
         this.setPadding(0, 0, 0, 15);
+        this.setBackgroundColor(Color.CYAN);
+        this.setClickable(true);
+        super.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+                System.out.println("Click on device item");
+            }
+        });
     }
     
+ 
     
 }

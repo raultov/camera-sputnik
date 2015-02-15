@@ -132,8 +132,8 @@ public class MainActivity extends ActionBarActivity {
     public void scanDevices(View view) {
         Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
         Intent intent = new Intent(this, BluetoothDevicesListActivity.class);
-        String message = "hola nueva ventanita2";
-        intent.putExtra(EXTRA_MESSAGE, message);
+    //    String message = "hola nueva ventanita2";
+    //    intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 }

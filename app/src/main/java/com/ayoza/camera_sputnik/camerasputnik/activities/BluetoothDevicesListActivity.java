@@ -32,13 +32,13 @@ public class BluetoothDevicesListActivity extends Activity {
         List<BluetoothDevice> devicesFound = bluetoothMgr.getListDevicesFound();
         
         // Get the message from the intent
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+      //  Intent intent = getIntent();
+      //  String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 
         // Create the text view
-        TextView textView = (TextView) findViewById(R.id.devicesListLabel);
-        textView.setTextSize(20);
-        textView.setText(message);
+     //   TextView textView = (TextView) findViewById(R.id.devicesListLabel);
+     //   textView.setTextSize(20);
+     //   textView.setText(message);
         
         LinearLayout m_vwJokeLayout=(LinearLayout) this.findViewById(R.id.linearDeviceList);
         int i = 0;
