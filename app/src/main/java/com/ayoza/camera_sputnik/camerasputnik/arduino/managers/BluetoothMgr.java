@@ -34,6 +34,7 @@ public final class BluetoothMgr {
 
     public static final int REQUEST_ENABLE_BT = 6666;
     private static final String UUID_HC06 = "00001101-0000-1000-8000-00805F9B34FB";
+    private static final String MAGIC_NUMBER = "5FRK14U0JKMTY71";
 
     private final BroadcastReceiver mReceiver;
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -119,6 +120,36 @@ public final class BluetoothMgr {
         } else {
             Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery no pudo comenzar");
         }
+    }
+    
+    public Boolean connect(BluetoothDevice device) {
+        
+        if (device != null) {
+            try {
+                bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
+                bs.connect();
+                // TODO obtener magic number y poner connect = true
+                
+            } catch (IOException e) {
+                
+            }
+            
+        }
+        
+        return false;
+    }
+    
+    public void disconnect() {
+        try {
+            if (bs != null) {
+                bs.close();
+            }
+        } catch (IOException closeException) { 
+        
+        } finally {
+            bs = null;
+        }
+        
     }
 
     public List<BluetoothDevice> getListDevicesFound() {

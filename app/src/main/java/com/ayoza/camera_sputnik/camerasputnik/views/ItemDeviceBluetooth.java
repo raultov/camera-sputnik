@@ -1,25 +1,30 @@
 package com.ayoza.camera_sputnik.camerasputnik.views;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
+
+import java.io.Serializable;
 
 import static android.widget.LinearLayout.LayoutParams;
 
 /**
  * Created by raul on 11/02/15.
  */
-public class ItemDeviceBluetooth extends TextView {
+public class ItemDeviceBluetooth extends TextView implements Serializable {
+    
+    public static final long serialVersionUID = -698708377638738438L;
+    
+    private final BluetoothMgr bluetoothMgr;
     
     public ItemDeviceBluetooth(Integer id, String text, Context context) {
         super(context);
+
+        bluetoothMgr = BluetoothMgr.getInstance(context);
 
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(lp);
@@ -34,12 +39,13 @@ public class ItemDeviceBluetooth extends TextView {
         super.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 
                 System.out.println("Click on device item");
             }
         });
     }
     
- 
-    
+
 }
