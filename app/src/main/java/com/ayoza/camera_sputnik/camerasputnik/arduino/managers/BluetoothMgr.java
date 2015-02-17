@@ -19,6 +19,7 @@ import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnDiscoveryFinishedList
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,29 +73,18 @@ public final class BluetoothMgr {
                     // Store bluetooth device to be used later
                     listDevicesFound.add(device);
 
-                    try {
-                        if (bDeviceSputnik != null) {
-                            String name = bDeviceSputnik.getName();
 
-                            if (device.getName().equals(name)) {
-                                mBluetoothAdapter.cancelDiscovery();
-                                bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
-                                bs.connect();
-                                connected = true;
+                    if (bDeviceSputnik != null) {
+                        String name = bDeviceSputnik.getName();
 
-                                OutputStream os = bs.getOutputStream();
-                                os.write("Hola Arduino!".getBytes());
-                            }
+                        if (device.getName().equals(name)) {
+                            mBluetoothAdapter.cancelDiscovery();
+                            connect(device);
                         }
-                    } catch (IOException e) {
-                        try {
-                            bs.close();
-                        } catch (IOException closeException) { }
-                        e.printStackTrace();
-                        return;
                     }
+
                 } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                    Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery terminó");
+                    Log.d(BluetoothMgr.class.getSimpleName(), "Discovery finished");
 
                     discoveryFinishedListener.onDiscoveryFinished(connected);
                 }
@@ -116,9 +106,9 @@ public final class BluetoothMgr {
         // startDiscovery cuando el Bluetooth no está habilitado
         boolean ret = mBluetoothAdapter.startDiscovery();
         if (ret == true) {
-            Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery comenzó");
+            Log.d(BluetoothMgr.class.getSimpleName(), "Discovery started");
         } else {
-            Log.d(BluetoothMgr.class.getSimpleName(), "El Discovery no pudo comenzar");
+            Log.d(BluetoothMgr.class.getSimpleName(), "Discovery could not start");
         }
     }
     
@@ -128,15 +118,27 @@ public final class BluetoothMgr {
             try {
                 bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
                 bs.connect();
-                // TODO obtener magic number y poner connect = true
+
+                InputStream is = bs.getInputStream();
+                byte[] buffer = null;
+                is.read(buffer, 0, MAGIC_NUMBER.length());
+                if (buffer.toString().equals(MAGIC_NUMBER)) {
+                    connected = true;
+                } else {
+                    // TODO inform device incompatible
+                    connected = false;
+                    bs.close();
+                    bs = null;
+                }
                 
             } catch (IOException e) {
                 
             }
-            
         }
+
+        discoveryFinishedListener.onDiscoveryFinished(connected);
         
-        return false;
+        return connected;
     }
     
     public void disconnect() {
