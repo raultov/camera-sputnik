@@ -114,15 +114,18 @@ public final class BluetoothMgr {
     
     public Boolean connect(BluetoothDevice device) {
         
+        // TODO is.read() must have a timeout, build a thread here and block this method when a connection is being stablished
+        
         if (device != null) {
             try {
                 bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
                 bs.connect();
 
                 InputStream is = bs.getInputStream();
-                byte[] buffer = null;
+                byte[] buffer = new byte[MAGIC_NUMBER.length()];
                 is.read(buffer, 0, MAGIC_NUMBER.length());
-                if (buffer.toString().equals(MAGIC_NUMBER)) {
+
+                if (buffer != null && buffer.toString().equals(MAGIC_NUMBER)) {
                     connected = true;
                     // insert device in DB
                     BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
