@@ -38,6 +38,12 @@ public final class ConfigurationMgr {
         
         return bDeviceSputnik;
     }
+    
+    public void insertPairedBluetoothDevice(BDeviceSputnik bDeviceSputnik) {
+        configurationDao.open();
+        configurationDao.createBluetoothDevice(bDeviceSputnik.getName(), bDeviceSputnik.getMac(), bDeviceSputnik.getPaired());
+        configurationDao.close();
+    }
 
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();

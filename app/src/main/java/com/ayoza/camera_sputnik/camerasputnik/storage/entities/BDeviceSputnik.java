@@ -12,7 +12,7 @@ public class BDeviceSputnik implements Serializable, Cloneable {
     private Long id;
     private String name;
     private String mac;
-    private Integer paired;
+    private Boolean paired;
 
     public Long getId() {
         return id;
@@ -38,11 +38,11 @@ public class BDeviceSputnik implements Serializable, Cloneable {
         this.mac = mac;
     }
 
-    public Integer getPaired() {
+    public Boolean getPaired() {
         return paired;
     }
 
-    public void setPaired(Integer paired) {
+    public void setPaired(Boolean paired) {
         this.paired = paired;
     }
     
@@ -54,6 +54,18 @@ public class BDeviceSputnik implements Serializable, Cloneable {
             return null;
         }
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        BDeviceSputnik objDeviceSputnik = (BDeviceSputnik) obj;
+        
+        if (id == null || objDeviceSputnik.id == null) {
+            return false;
+        }
+        
+        return objDeviceSputnik.getId() == id;
+    }
+        
 
     @Override
     public String toString() {

@@ -43,7 +43,7 @@ public class BluetoothDevicesListActivity extends Activity {
         LinearLayout m_vwJokeLayout=(LinearLayout) this.findViewById(R.id.linearDeviceList);
         int i = 0;
         for (BluetoothDevice bluetoothDevice : devicesFound) {
-            ItemDeviceBluetooth itemDeviceBluetooth = new ItemDeviceBluetooth(i, bluetoothDevice.getName(), this);
+            ItemDeviceBluetooth itemDeviceBluetooth = new ItemDeviceBluetooth(i, bluetoothDevice, this);
             m_vwJokeLayout.addView(itemDeviceBluetooth);
             i++;
         }

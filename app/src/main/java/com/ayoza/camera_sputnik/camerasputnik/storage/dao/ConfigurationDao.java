@@ -110,7 +110,7 @@ public class ConfigurationDao {
         bDeviceSputnik.setId(cursor.getLong(0));
         bDeviceSputnik.setName(cursor.getString(1));
         bDeviceSputnik.setMac(cursor.getString(2));
-        bDeviceSputnik.setPaired(cursor.getInt(3));
+        bDeviceSputnik.setPaired(cursor.getInt(3) == 1);
         return bDeviceSputnik;
     }
 }

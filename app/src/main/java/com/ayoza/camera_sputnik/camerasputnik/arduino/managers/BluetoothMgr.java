@@ -124,6 +124,12 @@ public final class BluetoothMgr {
                 is.read(buffer, 0, MAGIC_NUMBER.length());
                 if (buffer.toString().equals(MAGIC_NUMBER)) {
                     connected = true;
+                    // insert device in DB
+                    BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
+                    bDeviceSputnik.setName(device.getName());
+                    bDeviceSputnik.setMac(device.getAddress());
+                    bDeviceSputnik.setPaired(true);
+                    configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);
                 } else {
                     // TODO inform device incompatible
                     connected = false;
