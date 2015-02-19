@@ -36,6 +36,7 @@ public final class BluetoothMgr {
     public static final int REQUEST_ENABLE_BT = 6666;
     private static final String UUID_HC06 = "00001101-0000-1000-8000-00805F9B34FB";
     private static final String MAGIC_NUMBER = "5FRK14U0JKMTY71";
+    private static final long TIMEOUT_READ_MS = 5000;
 
     private final BroadcastReceiver mReceiver;
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -114,7 +115,7 @@ public final class BluetoothMgr {
     
     public Boolean connect(BluetoothDevice device) {
         
-        // TODO is.read() must have a timeout, build a thread here and block this method when a connection is being stablished
+        // TODO build a thread here and block this method while a connection is being established
         
         if (device != null) {
             try {
@@ -123,7 +124,17 @@ public final class BluetoothMgr {
 
                 InputStream is = bs.getInputStream();
                 byte[] buffer = new byte[MAGIC_NUMBER.length()];
-                is.read(buffer, 0, MAGIC_NUMBER.length());
+                int lengthReadBytes = 0;
+                long initialTime = System.currentTimeMillis();
+                long currentTime = initialTime;
+                
+                while(lengthReadBytes != MAGIC_NUMBER.length() && (currentTime - initialTime) < TIMEOUT_READ_MS) {
+                    if( is.available() > 0 ) {
+                        lengthReadBytes = is.read(buffer, 0, MAGIC_NUMBER.length());
+                    }
+
+                    currentTime = System.currentTimeMillis();
+                }
 
                 if (buffer != null && buffer.toString().equals(MAGIC_NUMBER)) {
                     connected = true;
@@ -206,6 +217,8 @@ public final class BluetoothMgr {
     }
 
     public boolean startDiscovery() {
+        // reset list of devices found previously
+        listDevicesFound.clear();
         return mBluetoothAdapter.startDiscovery();
     }
 
