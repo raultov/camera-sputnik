@@ -6,10 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
+import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
 
 public class LoadingActivity extends Activity {
     //A ProgressDialog object
     private ProgressDialog progressDialog;
+    
+    private OnBackgroundListener onBackgroundListener;
 
     /** Called when the activity is first created. */
     @Override
@@ -18,6 +21,10 @@ public class LoadingActivity extends Activity {
 
         //Initialize a LoadViewTask object and call the execute() method
         new LoadViewTask().execute();
+    }
+    
+    public void setOnBackgroundListener(OnBackgroundListener onBackgroundListener) {
+        this.onBackgroundListener = onBackgroundListener;
     }
 
     //To use the AsyncTask, it must be subclassed
@@ -32,6 +39,11 @@ public class LoadingActivity extends Activity {
         //The code to be executed in a background thread.
         @Override
         protected Void doInBackground(Void... params) {
+            
+            if (onBackgroundListener != null) {
+                onBackgroundListener.onBackground();
+            }
+            
 			/* This is just a code that delays the thread execution 4 times,
 			 * during 850 milliseconds and updates the current progress. This
 			 * is where the code that is going to be executed on a background

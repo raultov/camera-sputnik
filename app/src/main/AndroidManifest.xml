@@ -30,6 +30,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+
+        <activity
+            android:name="com.ayoza.camera_sputnik.camerasputnik.activities.LoadingActivity"
+            android:label="Loading screen"
+            android:parentActivityName=".activities.BluetoothDevicesListActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.BluetoothDevicesListActivity" />
+        </activity>
         
     </application>
 

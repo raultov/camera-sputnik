@@ -2,17 +2,16 @@ package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
 import com.ayoza.camera_sputnik.camerasputnik.views.ItemDeviceBluetooth;
-
-import android.widget.LinearLayout.LayoutParams;
 
 import java.util.List;
 
@@ -22,10 +21,12 @@ import java.util.List;
 public class BluetoothDevicesListActivity extends Activity {
 
     private BluetoothMgr bluetoothMgr;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_devices_list);
 
         bluetoothMgr = BluetoothMgr.getInstance();

@@ -13,14 +13,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnDiscoveryFinishedListener;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -73,7 +71,6 @@ public final class BluetoothMgr {
 
                     // Store bluetooth device to be used later
                     listDevicesFound.add(device);
-
 
                     if (bDeviceSputnik != null) {
                         String name = bDeviceSputnik.getName();
