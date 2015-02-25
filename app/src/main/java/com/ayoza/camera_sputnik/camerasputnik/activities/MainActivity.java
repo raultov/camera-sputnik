@@ -1,6 +1,8 @@
 package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.content.Intent;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,18 +14,22 @@ import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
-import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnDiscoveryFinishedListener;
+
+import android.os.Handler;
 
 
 public class MainActivity extends ActionBarActivity {
 
     public final static String EXTRA_MESSAGE = "com.ayoza.camera_sputnik.MESSAGE";
     public final static String DEVICES_LIST = "com.ayoza.camera_sputnik.DEVICES_LIST";
+    
+    public final static int CONNECTION_STATUS_MSG = 1;
 
     private BluetoothMgr bluetoothMgr;
     private TextView bluetoothStatus;
     private Button devicesScanButton;
-
+    public static Handler mHandlerStatic = null;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,34 +46,44 @@ public class MainActivity extends ActionBarActivity {
 
         bluetoothMgr.registerReceiver(this);
 
-        bluetoothMgr.setDiscoveryFinishedListener(new OnDiscoveryFinishedListener() {
+        mHandlerStatic = new Handler(Looper.getMainLooper()) {
             @Override
-            public void onDiscoveryFinished(Boolean connected) {
-                if (connected == false) {
-                    bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
-                    bluetoothStatus.setPadding(20, 20, 20, 20);
-                    bluetoothStatus.setText(getResources().getString(R.string.desconectado_str_es));
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case CONNECTION_STATUS_MSG:
+                        Boolean connected = (Boolean) msg.obj;
+                        
+                        if (connected == false) {
+                            bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
+                            bluetoothStatus.setPadding(20, 20, 20, 20);
+                            bluetoothStatus.setText(getResources().getString(R.string.desconectado_str_es));
 
-                    devicesScanButton.setEnabled(true);
-                    devicesScanButton.setClickable(true);
-                    //devicesScanButton.setBackgroundColor(Color.argb(255,10,17,255));
-                    devicesScanButton.setBackgroundColor(getResources().getColor(R.color.list_devices_activated));
-                    devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_activated));
-                    //FF0A11FF
-                } else {
-                    bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_green);
-                    bluetoothStatus.setPadding(20, 20, 20, 20);
-                    bluetoothStatus.setText(getResources().getString(R.string.conectado_str_es));
+                            devicesScanButton.setEnabled(true);
+                            devicesScanButton.setClickable(true);
+                            //devicesScanButton.setBackgroundColor(Color.argb(255,10,17,255));
+                            devicesScanButton.setBackgroundColor(getResources().getColor(R.color.list_devices_activated));
+                            devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_activated));
+                            //FF0A11FF
+                        } else {
+                            bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_green);
+                            bluetoothStatus.setPadding(20, 20, 20, 20);
+                            bluetoothStatus.setText(getResources().getString(R.string.conectado_str_es));
 
-                    devicesScanButton.setEnabled(false);
-                    devicesScanButton.setClickable(false);
-                    //devicesScanButton.setBackgroundColor(Color.argb(255,194,192,188));
-                    devicesScanButton.setBackgroundColor(getResources().getColor(R.color.deactivated));
-                    devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_deactivated));
-                    //FFC2C0BC
+                            devicesScanButton.setEnabled(false);
+                            devicesScanButton.setClickable(false);
+                            //devicesScanButton.setBackgroundColor(Color.argb(255,194,192,188));
+                            devicesScanButton.setBackgroundColor(getResources().getColor(R.color.deactivated));
+                            devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_deactivated));
+                            //FFC2C0BC
+                        }       
+                        break;
                 }
             }
-        });
+        };
+    }
+
+    public static Handler getmHandlerStatic() {
+        return mHandlerStatic;
     }
     
     @Override

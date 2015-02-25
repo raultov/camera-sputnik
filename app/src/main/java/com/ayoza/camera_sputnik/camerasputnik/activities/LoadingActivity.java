@@ -12,7 +12,7 @@ public class LoadingActivity extends Activity {
     //A ProgressDialog object
     private ProgressDialog progressDialog;
     
-    private OnBackgroundListener onBackgroundListener;
+    private static OnBackgroundListener onBackgroundListenerStatic;
 
     /** Called when the activity is first created. */
     @Override
@@ -23,8 +23,8 @@ public class LoadingActivity extends Activity {
         new LoadViewTask().execute();
     }
     
-    public void setOnBackgroundListener(OnBackgroundListener onBackgroundListener) {
-        this.onBackgroundListener = onBackgroundListener;
+    public static void setOnBackgroundListener(OnBackgroundListener onBackgroundListener) {
+        onBackgroundListenerStatic = onBackgroundListener;
     }
 
     //To use the AsyncTask, it must be subclassed
@@ -40,34 +40,10 @@ public class LoadingActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
             
-            if (onBackgroundListener != null) {
-                onBackgroundListener.onBackground();
+            if (onBackgroundListenerStatic != null) {
+                onBackgroundListenerStatic.onBackground();
             }
             
-			/* This is just a code that delays the thread execution 4 times,
-			 * during 850 milliseconds and updates the current progress. This
-			 * is where the code that is going to be executed on a background
-			 * thread must be placed.
-			 */
-            try {
-                //Get the current thread's token
-                synchronized (this) {
-                    //Initialize an integer (that will act as a counter) to zero
-                    int counter = 0;
-                    //While the counter is smaller than four
-                    while(counter <= 4) {
-                        //Wait 850 milliseconds
-                        this.wait(850);
-                        //Increment the counter
-                        counter++;
-                        //Set the current progress.
-                        //This value is going to be passed to the onProgressUpdate() method.
-                        publishProgress(counter*25);
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             return null;
         }
 
@@ -84,7 +60,10 @@ public class LoadingActivity extends Activity {
             //close the progress dialog
             progressDialog.dismiss();
             //initialize the View
-            setContentView(R.layout.activity_main);
+            //setContentView(R.layout.activity_devices_list);
+            //getFragmentManager().popBackStack();
+            
+            // TODO go back to previous activity
         }
     }
 }

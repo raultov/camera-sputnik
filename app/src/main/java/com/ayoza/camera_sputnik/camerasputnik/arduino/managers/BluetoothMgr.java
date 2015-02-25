@@ -12,9 +12,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Message;
 import android.util.Log;
 
-import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnDiscoveryFinishedListener;
+import com.ayoza.camera_sputnik.camerasputnik.activities.LoadingActivity;
+import com.ayoza.camera_sputnik.camerasputnik.activities.MainActivity;
+import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
 import java.io.IOException;
@@ -44,7 +47,6 @@ public final class BluetoothMgr {
     private static Context context;
     
     private Boolean connected = false;
-    private OnDiscoveryFinishedListener discoveryFinishedListener;
     private List<BluetoothDevice> listDevicesFound;
 
     private BluetoothMgr() {
@@ -84,7 +86,15 @@ public final class BluetoothMgr {
                 } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                     Log.d(BluetoothMgr.class.getSimpleName(), "Discovery finished");
 
-                    discoveryFinishedListener.onDiscoveryFinished(connected);
+                    //discoveryFinishedListener.onDiscoveryFinished(connected);
+                    // Sends connection status to main thread
+                    Message msg = new Message();
+                    msg.obj = new Boolean(connected);
+                    msg.what = MainActivity.CONNECTION_STATUS_MSG;
+
+                    if (MainActivity.getmHandlerStatic() != null) {
+                        MainActivity.getmHandlerStatic().sendMessage(msg);
+                    }
                 }
             }
         };
@@ -110,10 +120,70 @@ public final class BluetoothMgr {
         }
     }
     
-    public Boolean connect(BluetoothDevice device) {
+    public void connect(final BluetoothDevice device) {
         
         // TODO build a thread here and block this method while a connection is being established
         
+        // Launch hear LoadingActivity and put next stub into onBackgroundListener of LoadingActivity
+        LoadingActivity.setOnBackgroundListener(new OnBackgroundListener() {
+            @Override
+            public void onBackground() {
+
+                if (device != null) {
+                    try {
+                        bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
+                        bs.connect();
+
+                        InputStream is = bs.getInputStream();
+                        byte[] buffer = new byte[MAGIC_NUMBER.length()];
+                        int lengthReadBytes = 0;
+                        long initialTime = System.currentTimeMillis();
+                        long currentTime = initialTime;
+
+                        while(lengthReadBytes != MAGIC_NUMBER.length() && (currentTime - initialTime) < TIMEOUT_READ_MS) {
+                            if( is.available() > 0 ) {
+                                lengthReadBytes = is.read(buffer, 0, MAGIC_NUMBER.length());
+                            }
+
+                            currentTime = System.currentTimeMillis();
+                        }
+
+                        if (buffer != null && buffer.toString().equals(MAGIC_NUMBER)) {
+                            connected = true;
+                            // insert device in DB
+                            BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
+                            bDeviceSputnik.setName(device.getName());
+                            bDeviceSputnik.setMac(device.getAddress());
+                            bDeviceSputnik.setPaired(true);
+                            configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);
+                        } else {
+                            // TODO inform device incompatible
+                            connected = false;
+                            bs.close();
+                            bs = null;
+                        }
+
+                    } catch (IOException e) {
+
+                    }
+                }
+
+                // Sends connection status to main thread
+                Message msg = new Message();
+                msg.obj = new Boolean(connected);
+                msg.what = MainActivity.CONNECTION_STATUS_MSG;
+                
+                if (MainActivity.getmHandlerStatic() != null) {
+                    MainActivity.getmHandlerStatic().sendMessage(msg);
+                }
+            }
+        });
+
+        Log.d(BluetoothMgr.class.getSimpleName(), "Starting loading activity");
+        Intent intent = new Intent(context, LoadingActivity.class);
+        context.startActivity(intent);
+        
+        /*
         if (device != null) {
             try {
                 bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
@@ -154,8 +224,7 @@ public final class BluetoothMgr {
         }
 
         discoveryFinishedListener.onDiscoveryFinished(connected);
-        
-        return connected;
+        */
     }
     
     public void disconnect() {
@@ -225,10 +294,6 @@ public final class BluetoothMgr {
                 bs.close();
             } catch (IOException e) {}
         }
-    }
-
-    public void setDiscoveryFinishedListener(OnDiscoveryFinishedListener discoveryFinishedListener) {
-        this.discoveryFinishedListener = discoveryFinishedListener;
     }
 
     public Object clone() throws CloneNotSupportedException {
