@@ -5,5 +5,5 @@ package com.ayoza.camera_sputnik.camerasputnik.interfaces;
  */
 public interface OnBackgroundListener {
     
-    public void onBackground();
+    public boolean onBackground();
 }

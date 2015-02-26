@@ -127,7 +127,7 @@ public final class BluetoothMgr {
         // Launch hear LoadingActivity and put next stub into onBackgroundListener of LoadingActivity
         LoadingActivity.setOnBackgroundListener(new OnBackgroundListener() {
             @Override
-            public void onBackground() {
+            public boolean onBackground() {
 
                 if (device != null) {
                     try {
@@ -176,6 +176,8 @@ public final class BluetoothMgr {
                 if (MainActivity.getmHandlerStatic() != null) {
                     MainActivity.getmHandlerStatic().sendMessage(msg);
                 }
+
+                return connected;
             }
         });
 

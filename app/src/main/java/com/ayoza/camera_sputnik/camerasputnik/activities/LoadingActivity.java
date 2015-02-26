@@ -2,8 +2,11 @@ package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
@@ -11,6 +14,7 @@ import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
 public class LoadingActivity extends Activity {
     //A ProgressDialog object
     private ProgressDialog progressDialog;
+    private Context context = null;
     
     private static OnBackgroundListener onBackgroundListenerStatic;
 
@@ -19,6 +23,7 @@ public class LoadingActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        context = this;
         //Initialize a LoadViewTask object and call the execute() method
         new LoadViewTask().execute();
     }
@@ -29,6 +34,9 @@ public class LoadingActivity extends Activity {
 
     //To use the AsyncTask, it must be subclassed
     private class LoadViewTask extends AsyncTask<Void, Integer, Void> {
+        
+        private boolean connected = false;
+        
         //Before running code in separate thread
         @Override
         protected void onPreExecute() {
@@ -41,7 +49,7 @@ public class LoadingActivity extends Activity {
         protected Void doInBackground(Void... params) {
             
             if (onBackgroundListenerStatic != null) {
-                onBackgroundListenerStatic.onBackground();
+                connected = onBackgroundListenerStatic.onBackground();
             }
             
             return null;
@@ -63,7 +71,14 @@ public class LoadingActivity extends Activity {
             //setContentView(R.layout.activity_devices_list);
             //getFragmentManager().popBackStack();
             
-            // TODO go back to previous activity
+            if (connected == false) {
+                Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
+                Intent intent = new Intent(context, BluetoothDevicesListActivity.class);
+                startActivity(intent);
+            } else {
+                // TODO go back to main activity
+                
+            }
         }
     }
 }
