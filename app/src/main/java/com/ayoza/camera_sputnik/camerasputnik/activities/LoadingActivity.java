@@ -72,12 +72,13 @@ public class LoadingActivity extends Activity {
             //getFragmentManager().popBackStack();
             
             if (connected == false) {
-                Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
+                Log.d(LoadingActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
                 Intent intent = new Intent(context, BluetoothDevicesListActivity.class);
                 startActivity(intent);
             } else {
-                // TODO go back to main activity
-                
+                Log.d(LoadingActivity.class.getSimpleName(), "Starting Main Activity");
+                Intent intent = new Intent(context, MainActivity.class);
+                startActivity(intent);
             }
         }
     }
