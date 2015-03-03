@@ -62,21 +62,10 @@ public class BluetoothDevicesListActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    /*
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() { }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_main, container, false);
-            return rootView;
-        }
+    @Override
+    public void onBackPressed() {
+        // TODO nothing to do 
+        // Instead implement a back button to load main activity and call finish(); to kill current activity
     }
-    */
+
 }

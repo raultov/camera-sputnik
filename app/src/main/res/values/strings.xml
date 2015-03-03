@@ -11,5 +11,7 @@
     <string name="device_list_es">Lista de dispositivos</string>
     <string name="Device1">Device 1</string>
     <string name="devices_list_es">Dispositivos detectados</string>
+    <string name="connecting">Conectando…</string>
+    <string name="connecting_device">Conectando con el dispositivo</string>
 
 </resources>

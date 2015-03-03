@@ -40,8 +40,8 @@ public class LoadingActivity extends Activity {
         //Before running code in separate thread
         @Override
         protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(LoadingActivity.this,"Loading...",
-                    "Loading application View, please wait...", false, false);
+            progressDialog = ProgressDialog.show(LoadingActivity.this, context.getString(R.string.connecting),
+                    context.getString(R.string.connecting_device), false, false);
         }
 
         //The code to be executed in a background thread.
@@ -71,7 +71,7 @@ public class LoadingActivity extends Activity {
             //setContentView(R.layout.activity_devices_list);
             //getFragmentManager().popBackStack();
             
-            if (connected == false) {
+            if (!connected) {
                 Log.d(LoadingActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
                 Intent intent = new Intent(context, BluetoothDevicesListActivity.class);
                 startActivity(intent);
