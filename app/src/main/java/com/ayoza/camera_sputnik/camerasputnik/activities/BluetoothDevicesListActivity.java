@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
@@ -19,6 +20,8 @@ import java.util.List;
  * Created by raul on 23/01/15.
  */
 public class BluetoothDevicesListActivity extends Activity {
+
+    public static final int LOADING_CONNECTING_ACTIVITY = 1;
 
     private BluetoothMgr bluetoothMgr;
     private Context context;
@@ -51,6 +54,19 @@ public class BluetoothDevicesListActivity extends Activity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LOADING_CONNECTING_ACTIVITY) {
+            if (resultCode == RESULT_OK) {
+                if (bluetoothMgr.getConnected()) {
+                    // Go back to main activity
+                    setResult(MainActivity.SCAN_DEVICES_LIST, null);
+                    finish();
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -62,10 +78,22 @@ public class BluetoothDevicesListActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     @Override
     public void onBackPressed() {
-        // TODO nothing to do 
-        // Instead implement a back button to load main activity and call finish(); to kill current activity
-    }
 
+    }
+    */
+
+    /**
+     * Called when user clicks on cancel button sited on devices list
+     */
+    /*
+    public void onCancelDeviceListPressed(View view) {
+        Log.d(BluetoothDevicesListActivity.class.getSimpleName(), "Going back to main activity");
+        finish();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+    */
 }

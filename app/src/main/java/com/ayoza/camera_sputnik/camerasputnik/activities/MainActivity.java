@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,10 +21,9 @@ import android.os.Handler;
 
 public class MainActivity extends ActionBarActivity {
 
-    public final static String EXTRA_MESSAGE = "com.ayoza.camera_sputnik.MESSAGE";
-    public final static String DEVICES_LIST = "com.ayoza.camera_sputnik.DEVICES_LIST";
-    
     public final static int CONNECTION_STATUS_MSG = 1;
+
+    public static final int SCAN_DEVICES_LIST = 0;
 
     private BluetoothMgr bluetoothMgr;
     private TextView bluetoothStatus;
@@ -46,40 +46,46 @@ public class MainActivity extends ActionBarActivity {
 
         bluetoothMgr.registerReceiver(this);
 
+        //paintComponents(bluetoothMgr.getConnected());
+
         mHandlerStatic = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case CONNECTION_STATUS_MSG:
                         Boolean connected = (Boolean) msg.obj;
-                        
-                        if (connected == false) {
-                            bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
-                            bluetoothStatus.setPadding(20, 20, 20, 20);
-                            bluetoothStatus.setText(getResources().getString(R.string.desconectado_str_es));
 
-                            devicesScanButton.setEnabled(true);
-                            devicesScanButton.setClickable(true);
-                            //devicesScanButton.setBackgroundColor(Color.argb(255,10,17,255));
-                            devicesScanButton.setBackgroundColor(getResources().getColor(R.color.list_devices_activated));
-                            devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_activated));
-                            //FF0A11FF
-                        } else {
-                            bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_green);
-                            bluetoothStatus.setPadding(20, 20, 20, 20);
-                            bluetoothStatus.setText(getResources().getString(R.string.conectado_str_es));
-
-                            devicesScanButton.setEnabled(false);
-                            devicesScanButton.setClickable(false);
-                            //devicesScanButton.setBackgroundColor(Color.argb(255,194,192,188));
-                            devicesScanButton.setBackgroundColor(getResources().getColor(R.color.deactivated));
-                            devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_deactivated));
-                            //FFC2C0BC
-                        }       
+                        paintComponents(connected);
                         break;
                 }
             }
         };
+    }
+    
+    private void paintComponents(boolean connected) {
+        if (connected == false) {
+            bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
+            bluetoothStatus.setPadding(20, 20, 20, 20);
+            bluetoothStatus.setText(getResources().getString(R.string.desconectado_str_es));
+
+            devicesScanButton.setEnabled(true);
+            devicesScanButton.setClickable(true);
+            //devicesScanButton.setBackgroundColor(Color.argb(255,10,17,255));
+            devicesScanButton.setBackgroundColor(getResources().getColor(R.color.list_devices_activated));
+            devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_activated));
+            //FF0A11FF
+        } else {
+            bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_green);
+            bluetoothStatus.setPadding(20, 20, 20, 20);
+            bluetoothStatus.setText(getResources().getString(R.string.conectado_str_es));
+
+            devicesScanButton.setEnabled(false);
+            devicesScanButton.setClickable(false);
+            //devicesScanButton.setBackgroundColor(Color.argb(255,194,192,188));
+            devicesScanButton.setBackgroundColor(getResources().getColor(R.color.deactivated));
+            devicesScanButton.setTextColor(getResources().getColor(R.color.list_devices_text_deactivated));
+            //FFC2C0BC
+        }
     }
 
     public static Handler getmHandlerStatic() {
@@ -105,6 +111,7 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BluetoothMgr.REQUEST_ENABLE_BT) {
             if (resultCode == RESULT_OK) {
@@ -118,6 +125,11 @@ public class MainActivity extends ActionBarActivity {
                 } else {
                     Log.d(MainActivity.class.getSimpleName(), "El Discovery no pudo comenzar");
                 }
+            }
+        } else  if (requestCode == SCAN_DEVICES_LIST) {
+            if (resultCode == RESULT_OK) {
+                // Come back from scanned devices list
+
             }
         }
     }
@@ -146,10 +158,16 @@ public class MainActivity extends ActionBarActivity {
 
     /** Called when the user clicks the Scan Devices button */
     public void scanDevices(View view) {
-        Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
+        Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices list");
+        //finish();
         Intent intent = new Intent(this, BluetoothDevicesListActivity.class);
-    //    String message = "hola nueva ventanita2";
-    //    intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+        //startActivity(intent);
+
+        startActivityForResult(intent, SCAN_DEVICES_LIST);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

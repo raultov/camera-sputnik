@@ -65,21 +65,26 @@ public class LoadingActivity extends Activity {
         //after executing the code in the thread
         @Override
         protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
             //close the progress dialog
             progressDialog.dismiss();
             //initialize the View
             //setContentView(R.layout.activity_devices_list);
             //getFragmentManager().popBackStack();
-            
+            finish();
+            /*
             if (!connected) {
                 Log.d(LoadingActivity.class.getSimpleName(), "Starting Bluetooth Devices scan");
+                finish();
                 Intent intent = new Intent(context, BluetoothDevicesListActivity.class);
                 startActivity(intent);
             } else {
                 Log.d(LoadingActivity.class.getSimpleName(), "Starting Main Activity");
+                finish();
                 Intent intent = new Intent(context, MainActivity.class);
                 startActivity(intent);
             }
+            */
         }
     }
 }

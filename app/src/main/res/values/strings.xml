@@ -13,5 +13,6 @@
     <string name="devices_list_es">Dispositivos detectados</string>
     <string name="connecting">Conectando…</string>
     <string name="connecting_device">Conectando con el dispositivo</string>
+    <string name="cancel_device_list">Cancelar</string>
 
 </resources>

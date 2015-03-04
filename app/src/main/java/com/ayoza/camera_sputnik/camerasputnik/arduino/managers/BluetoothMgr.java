@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.os.Message;
 import android.util.Log;
 
+import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.LoadingActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.MainActivity;
 import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
@@ -44,7 +45,7 @@ public final class BluetoothMgr {
     private BluetoothSocket bs = null;
     private Boolean isBluetoothEnabled = null;
     private ConfigurationMgr configurationMgr = null;
-    private static Context context;
+    private static Activity activity;
     
     private Boolean connected = false;
     private List<BluetoothDevice> listDevicesFound;
@@ -53,8 +54,8 @@ public final class BluetoothMgr {
 
         final BDeviceSputnik bDeviceSputnik;
 
-        if (context != null) {
-            configurationMgr = ConfigurationMgr.getInstance(context);
+        if (activity != null) {
+            configurationMgr = ConfigurationMgr.getInstance(activity);
             bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
         } else {
             bDeviceSputnik = null;
@@ -79,7 +80,7 @@ public final class BluetoothMgr {
 
                         if (device.getName().equals(name)) {
                             mBluetoothAdapter.cancelDiscovery();
-                            connect(device);
+                            connect(device, activity);
                         }
                     }
 
@@ -120,7 +121,7 @@ public final class BluetoothMgr {
         }
     }
     
-    public void connect(final BluetoothDevice device) {
+    public void connect(final BluetoothDevice device, final Activity activityHost) {
         
         // TODO build a thread here and block this method while a connection is being established
         
@@ -182,51 +183,8 @@ public final class BluetoothMgr {
         });
 
         Log.d(BluetoothMgr.class.getSimpleName(), "Starting loading activity");
-        Intent intent = new Intent(context, LoadingActivity.class);
-        context.startActivity(intent);
-        
-        /*
-        if (device != null) {
-            try {
-                bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
-                bs.connect();
-
-                InputStream is = bs.getInputStream();
-                byte[] buffer = new byte[MAGIC_NUMBER.length()];
-                int lengthReadBytes = 0;
-                long initialTime = System.currentTimeMillis();
-                long currentTime = initialTime;
-                
-                while(lengthReadBytes != MAGIC_NUMBER.length() && (currentTime - initialTime) < TIMEOUT_READ_MS) {
-                    if( is.available() > 0 ) {
-                        lengthReadBytes = is.read(buffer, 0, MAGIC_NUMBER.length());
-                    }
-
-                    currentTime = System.currentTimeMillis();
-                }
-
-                if (buffer != null && buffer.toString().equals(MAGIC_NUMBER)) {
-                    connected = true;
-                    // insert device in DB
-                    BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
-                    bDeviceSputnik.setName(device.getName());
-                    bDeviceSputnik.setMac(device.getAddress());
-                    bDeviceSputnik.setPaired(true);
-                    configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);
-                } else {
-                    // TODO inform device incompatible
-                    connected = false;
-                    bs.close();
-                    bs = null;
-                }
-                
-            } catch (IOException e) {
-                
-            }
-        }
-
-        discoveryFinishedListener.onDiscoveryFinished(connected);
-        */
+        Intent intent = new Intent(activityHost, LoadingActivity.class);
+        activityHost.startActivityForResult(intent, BluetoothDevicesListActivity.LOADING_CONNECTING_ACTIVITY);
     }
     
     public void disconnect() {
@@ -251,9 +209,9 @@ public final class BluetoothMgr {
         return connected;
     }
 
-    public static BluetoothMgr getInstance(Context context) {
+    public static BluetoothMgr getInstance(Activity activity) {
         if (instance == null) {
-            BluetoothMgr.context = context;
+            BluetoothMgr.activity = activity;
             instance = new BluetoothMgr();
         }
 

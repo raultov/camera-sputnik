@@ -1,5 +1,6 @@
 package com.ayoza.camera_sputnik.camerasputnik.views;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.graphics.Color;
@@ -22,10 +23,10 @@ public class ItemDeviceBluetooth extends TextView implements Serializable {
     
     private final BluetoothMgr bluetoothMgr;
     
-    public ItemDeviceBluetooth(Integer id, final BluetoothDevice bluetoothDevice, Context context) {
-        super(context);
+    public ItemDeviceBluetooth(Integer id, final BluetoothDevice bluetoothDevice, final Activity activity) {
+        super(activity);
 
-        bluetoothMgr = BluetoothMgr.getInstance(context);
+        bluetoothMgr = BluetoothMgr.getInstance(activity);
 
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(lp);
@@ -41,7 +42,7 @@ public class ItemDeviceBluetooth extends TextView implements Serializable {
         super.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                bluetoothMgr.connect(bluetoothDevice);
+                bluetoothMgr.connect(bluetoothDevice, activity);
             }
         });
     }
