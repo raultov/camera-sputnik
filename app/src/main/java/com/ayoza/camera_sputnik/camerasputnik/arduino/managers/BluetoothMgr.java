@@ -185,6 +185,7 @@ public final class BluetoothMgr {
         Log.d(BluetoothMgr.class.getSimpleName(), "Starting loading activity");
         Intent intent = new Intent(activityHost, LoadingActivity.class);
         activityHost.startActivityForResult(intent, BluetoothDevicesListActivity.LOADING_CONNECTING_ACTIVITY);
+        Log.d(BluetoothMgr.class.getSimpleName(), "Loading activity started");
     }
     
     public void disconnect() {
