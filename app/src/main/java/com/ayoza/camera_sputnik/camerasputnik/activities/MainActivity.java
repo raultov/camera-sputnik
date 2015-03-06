@@ -121,7 +121,11 @@ public class MainActivity extends ActionBarActivity {
 
                 boolean ret = bluetoothMgr.startDiscovery();
                 if (ret == true) {
-                    Log.d(MainActivity.class.getSimpleName(), "El Discovery comenzó");
+                    Log.d(MainActivity.class.getSimpleName(), "Discovery started");
+                    Log.d(MainActivity.class.getSimpleName(), "Starting ScanningDevicesActivity");
+                    Intent intent = new Intent(this, ScanningDevicesActivity.class);
+                    startActivityForResult(intent, 1);
+                    Log.d(MainActivity.class.getSimpleName(), "ScanningDevicesActivity started");
                 } else {
                     Log.d(MainActivity.class.getSimpleName(), "El Discovery no pudo comenzar");
                 }

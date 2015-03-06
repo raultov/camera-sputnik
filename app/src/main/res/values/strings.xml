@@ -14,5 +14,7 @@
     <string name="connecting">Conectando…</string>
     <string name="connecting_device">Conectando con el dispositivo</string>
     <string name="cancel_device_list">Cancelar</string>
+    <string name="scanning">Buscando…</string>
+    <string name="scanning_devices">Buscando dispositivos</string>
 
 </resources>

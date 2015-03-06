@@ -32,8 +32,18 @@
         </activity>
 
         <activity
+            android:name="com.ayoza.camera_sputnik.camerasputnik.activities.ScanningDevicesActivity"
+            android:label="Scanning Devices screen"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+
+        <activity
             android:name="com.ayoza.camera_sputnik.camerasputnik.activities.LoadingActivity"
-            android:label="Loading screen"
+            android:label="Connecting screen"
             android:parentActivityName=".activities.BluetoothDevicesListActivity"
             android:screenOrientation="portrait">
             <meta-data

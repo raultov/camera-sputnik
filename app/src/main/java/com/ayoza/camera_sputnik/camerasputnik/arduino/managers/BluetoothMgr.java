@@ -18,6 +18,7 @@ import android.util.Log;
 import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.LoadingActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.MainActivity;
+import com.ayoza.camera_sputnik.camerasputnik.activities.ScanningDevicesActivity;
 import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
@@ -87,7 +88,14 @@ public final class BluetoothMgr {
                 } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                     Log.d(BluetoothMgr.class.getSimpleName(), "Discovery finished");
 
-                    //discoveryFinishedListener.onDiscoveryFinished(connected);
+                    if (ScanningDevicesActivity.getmHandlerStatic() != null) {
+                        Message msgScanningDevices = new Message();
+                        msgScanningDevices.obj = null;
+                        msgScanningDevices.what = ScanningDevicesActivity.SCANNING_ENDED;
+                        ScanningDevicesActivity.getmHandlerStatic().sendMessage(msgScanningDevices);
+                    }
+                    
+                    
                     // Sends connection status to main thread
                     Message msg = new Message();
                     msg.obj = new Boolean(connected);
@@ -116,6 +124,10 @@ public final class BluetoothMgr {
         boolean ret = mBluetoothAdapter.startDiscovery();
         if (ret == true) {
             Log.d(BluetoothMgr.class.getSimpleName(), "Discovery started");
+            Log.d(BluetoothMgr.class.getSimpleName(), "Starting ScanningDevicesActivity");
+            Intent intent = new Intent(activity, ScanningDevicesActivity.class);
+            activity.startActivityForResult(intent, 1);
+            Log.d(BluetoothMgr.class.getSimpleName(), "ScanningDevicesActivity started");
         } else {
             Log.d(BluetoothMgr.class.getSimpleName(), "Discovery could not start");
         }

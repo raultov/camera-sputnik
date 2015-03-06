@@ -18,25 +18,30 @@ import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
 public class ScanningDevicesActivity extends Activity {
 
     public static final int SCANNING_ENDED = 1;
+    private static final long TIMEOUT = 50000L;
+    
     //A ProgressDialog object
     private ProgressDialog progressDialog;
     private Context context = null;
 
-    public static Handler mHandlerStatic = null; 
+    private static boolean scanningEnded = false;
+    private static Handler mHandlerStatic = null; 
     static {
         mHandlerStatic = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case SCANNING_ENDED:
-                        //Boolean connected = (Boolean) msg.obj;
-                        // set some kind of variable to say dialog that must finish
-                        //paintComponents(connected);
+                        scanningEnded = true;
                         break;
                 }
             }
         };
         
+    }
+
+    public static Handler getmHandlerStatic() {
+        return mHandlerStatic;
     }
 
     /** Called when the activity is first created. */
@@ -57,14 +62,21 @@ public class ScanningDevicesActivity extends Activity {
         //Before running code in separate thread
         @Override
         protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(ScanningDevicesActivity.this, context.getString(R.string.connecting),
-                    context.getString(R.string.connecting_device), false, false);
+            progressDialog = ProgressDialog.show(ScanningDevicesActivity.this, context.getString(R.string.scanning),
+                    context.getString(R.string.scanning_devices), false, false);
         }
 
         //The code to be executed in a background thread.
         @Override
         protected Void doInBackground(Void... params) {
+            long initial = System.currentTimeMillis();
+            
+            do {
+                
+            } while ((System.currentTimeMillis() - initial) < TIMEOUT && !scanningEnded);
 
+            // reset variable
+            scanningEnded = false;
             return null;
         }
 
