@@ -24,6 +24,7 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +40,7 @@ public final class BluetoothMgr {
     public static final int REQUEST_ENABLE_BT = 6666;
     private static final String UUID_HC06 = "00001101-0000-1000-8000-00805F9B34FB";
     private static final String MAGIC_NUMBER = "5FRK14U0JKMTY71";
+    private static final String CONNECTION_REQUEST = "CAMERABIKE";
     private static final long TIMEOUT_READ_MS = 5000;
 
     private final BroadcastReceiver mReceiver;
@@ -146,7 +148,18 @@ public final class BluetoothMgr {
                     try {
                         bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
                         bs.connect();
-
+        
+                        // Sends CONNECTION_REQUEST to wake up camera bike device
+                        OutputStream outputStream = bs.getOutputStream();
+                        outputStream.write(CONNECTION_REQUEST.getBytes());
+                        outputStream.flush();
+                        try {
+                            Thread.sleep(500);                 //500 milliseconds is one second.
+                        } catch(InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                        
+                        // Magic number is expected to be received to confirm this is a camera bike device
                         InputStream is = bs.getInputStream();
                         byte[] buffer = new byte[MAGIC_NUMBER.length()];
                         int lengthReadBytes = 0;
@@ -160,7 +173,10 @@ public final class BluetoothMgr {
 
                             currentTime = System.currentTimeMillis();
                         }
+                        
+                        Log.d(BluetoothMgr.class.getSimpleName(), "Buffer received: " + buffer.toString());
 
+                        //FIXME fix to read buffer correctly to compare with magic number
                         if (buffer != null && buffer.toString().equals(MAGIC_NUMBER)) {
                             connected = true;
                             // insert device in DB
