@@ -12,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Message;
 import android.util.Log;
 
@@ -176,8 +177,12 @@ public final class BluetoothMgr {
                         
                         Log.d(BluetoothMgr.class.getSimpleName(), "Buffer received: " + buffer.toString());
 
-                        //FIXME fix to read buffer correctly to compare with magic number
-                        if (buffer != null && buffer.toString().equals(MAGIC_NUMBER)) {
+                        String str = null;
+                        if (buffer != null) {
+                            str = new String(buffer);
+                        }
+                        
+                        if (str != null && str.equals(MAGIC_NUMBER)) {
                             connected = true;
                             // insert device in DB
                             BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
@@ -288,5 +293,4 @@ public final class BluetoothMgr {
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-
 }

@@ -56,6 +56,14 @@ public class MainActivity extends ActionBarActivity {
                         Boolean connected = (Boolean) msg.obj;
 
                         paintComponents(connected);
+                        
+                        if (connected) {
+                            DownloadingImageActivity taskDownload = new DownloadingImageActivity();
+                            taskDownload.execute();
+                        } else {
+                            
+                        }
+                        
                         break;
                 }
             }
