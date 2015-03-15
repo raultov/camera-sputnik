@@ -20,13 +20,17 @@ public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> 
     @Override
     protected Boolean doInBackground(Void... params) {
 
+        if (bluetoothMgr.getConnected()) {
+            
+        }
+
         for(int i = 0; i < 10; i++) {
             //tareaLarga();
 
             //publishProgress(i*10);
 
             if(isCancelled())
-                break;
+                return false;
         }
         
         return true;

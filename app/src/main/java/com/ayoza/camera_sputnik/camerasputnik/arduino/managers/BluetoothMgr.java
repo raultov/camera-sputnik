@@ -43,6 +43,9 @@ public final class BluetoothMgr {
     private static final String MAGIC_NUMBER = "5FRK14U0JKMTY71";
     private static final String CONNECTION_REQUEST = "CAMERABIKE";
     private static final long TIMEOUT_READ_MS = 5000;
+    private static final int HEADER_LENGTH = 10;
+    private static final char HEADER_FILL_CHARACTER = 'X';
+    private static final String OK_RESPONSE = "OK";
 
     private final BroadcastReceiver mReceiver;
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -155,12 +158,12 @@ public final class BluetoothMgr {
                         outputStream.write(CONNECTION_REQUEST.getBytes());
                         outputStream.flush();
                         try {
-                            Thread.sleep(500);                 //500 milliseconds is one second.
+                            Thread.sleep(500);                 //500 milliseconds
                         } catch(InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         }
                         
-                        // Magic number is expected to be received to confirm this is a camera bike device
+                        // Magic number is expected to be received to confirm this is a camera sputnik device
                         InputStream is = bs.getInputStream();
                         byte[] buffer = new byte[MAGIC_NUMBER.length()];
                         int lengthReadBytes = 0;
@@ -175,11 +178,13 @@ public final class BluetoothMgr {
                             currentTime = System.currentTimeMillis();
                         }
                         
-                        Log.d(BluetoothMgr.class.getSimpleName(), "Buffer received: " + buffer.toString());
+                        is.close();
+                        outputStream.close();
 
                         String str = null;
                         if (buffer != null) {
                             str = new String(buffer);
+                            Log.d(BluetoothMgr.class.getSimpleName(), "Buffer received: " + str);
                         }
                         
                         if (str != null && str.equals(MAGIC_NUMBER)) {
@@ -232,6 +237,124 @@ public final class BluetoothMgr {
             bs = null;
         }
         
+    }
+    
+    public boolean receiveImage() {
+        if (connected) {
+            InputStream is = null;
+            OutputStream outputStream = null;
+            try {
+                // Image length is expected
+                is = bs.getInputStream();
+                byte[] header = new byte[HEADER_LENGTH];
+                
+                int lengthReadBytes = 0;
+                long initialTime = System.currentTimeMillis();
+                long currentTime = initialTime;
+                while (lengthReadBytes != HEADER_LENGTH && (currentTime - initialTime) < TIMEOUT_READ_MS) {
+                    if (is.available() > 0) {
+                        lengthReadBytes = is.read(header, 0, HEADER_LENGTH);
+                    }
+
+                    currentTime = System.currentTimeMillis();
+                }
+
+                String str = null;
+                if (header != null) {
+                    str = new String(header);
+                }
+                
+                if (str == null) {
+                    return false;
+                }
+
+                Log.d(BluetoothMgr.class.getSimpleName(), "Header received: " + str);
+
+                int index = str.indexOf(HEADER_FILL_CHARACTER);
+                int length = -1;
+                if (index != -1) {
+                    String lengthStr = str.substring(index);
+
+                    try {
+                        length = Integer.valueOf(lengthStr);
+                    } catch(NumberFormatException nfe) { }
+                }
+
+                if (length == -1) {
+                    return false;
+                }
+
+                Log.d(BluetoothMgr.class.getSimpleName(), "Length received: " + length);
+                // send an 'OK' message to camera sputnik device
+                outputStream = bs.getOutputStream();
+                outputStream.write(OK_RESPONSE.getBytes());
+                outputStream.flush();
+                try {
+                    Thread.sleep(500);                 //500 milliseconds
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+
+                byte[] buffer = new byte[10];
+                int i = 0;
+                initialTime = System.currentTimeMillis();
+                currentTime = initialTime;
+                while (i < length && (currentTime - initialTime) < TIMEOUT_READ_MS) {
+                    if (is.available() > 0) {
+                        lengthReadBytes = is.read(buffer, 0, 10);
+                        
+                        // TODO call here imageMgr in order to store new image
+                        
+                        
+                        
+                        
+                        i += lengthReadBytes;
+                    }
+
+                    currentTime = System.currentTimeMillis();
+                }
+                
+                if (i < length) {
+                    return false;
+                }
+
+                // send an 'OK' message to camera sputnik device
+                outputStream = bs.getOutputStream();
+                outputStream.write(OK_RESPONSE.getBytes());
+                outputStream.flush();
+                try {
+                    Thread.sleep(500);                 //500 milliseconds
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                
+            } catch (IOException ioe) {
+                return false;
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException ioe2) {
+                        // FIXME It could happen when the image has already been downloaded
+                        return false;
+                    }
+                }
+
+                if (outputStream != null) {
+                    try {
+                        outputStream.close();
+                    } catch (IOException ioe2) {
+                        // FIXME It could happen when the image has already been downloaded
+                        return false;
+                    }
+                }                
+            }
+
+        } else {
+            return false;
+        }
+        
+        return true;
     }
 
     public List<BluetoothDevice> getListDevicesFound() {
