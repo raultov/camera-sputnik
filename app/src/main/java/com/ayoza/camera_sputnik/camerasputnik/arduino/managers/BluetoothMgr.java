@@ -20,6 +20,7 @@ import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListAct
 import com.ayoza.camera_sputnik.camerasputnik.activities.LoadingActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.MainActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.ScanningDevicesActivity;
+import com.ayoza.camera_sputnik.camerasputnik.exceptions.ImageException;
 import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
@@ -46,12 +47,14 @@ public final class BluetoothMgr {
     private static final int HEADER_LENGTH = 10;
     private static final char HEADER_FILL_CHARACTER = 'X';
     private static final String OK_RESPONSE = "OK";
+    private static final int MAX_EXPECTED_DATA = 10;
 
     private final BroadcastReceiver mReceiver;
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothSocket bs = null;
     private Boolean isBluetoothEnabled = null;
     private ConfigurationMgr configurationMgr = null;
+    private ImageMgr imageMgr = null;
     private static Activity activity;
     
     private Boolean connected = false;
@@ -295,17 +298,17 @@ public final class BluetoothMgr {
                     Thread.currentThread().interrupt();
                 }
 
-                byte[] buffer = new byte[10];
+                byte[] buffer = new byte[MAX_EXPECTED_DATA];
                 int i = 0;
                 initialTime = System.currentTimeMillis();
                 currentTime = initialTime;
                 while (i < length && (currentTime - initialTime) < TIMEOUT_READ_MS) {
                     if (is.available() > 0) {
-                        lengthReadBytes = is.read(buffer, 0, 10);
+                        lengthReadBytes = is.read(buffer, 0, MAX_EXPECTED_DATA);
                         
                         // TODO call here imageMgr in order to store new image
-                        
-                        
+                        imageMgr = ImageMgr.getInstance(activity);
+                        imageMgr.startNewImage(length);
                         
                         
                         i += lengthReadBytes;
@@ -330,12 +333,27 @@ public final class BluetoothMgr {
                 
             } catch (IOException ioe) {
                 return false;
+            } catch (ImageException e) {
+                switch (e.getError()) {
+                    case ImageException.EXTERNAL_STORAGE_NOT_AVAILABLE:
+                        // TODO inform with toast that external storage is not available
+                        break;
+                    case ImageException.DIRECTORY_COULD_NOT_BE_CREATED:
+                        // TODO inform with toast that directory could not be created
+                        break;
+                    case ImageException.NOT_ENOUGH_FREE_SPACE:
+                        // TODO inform with toast that there is not enough free space
+                        break;
+                    case ImageException.ANOTHER_IMAGE_IS_BEEING_PROCESSED:
+                        // TODO inform with toast that currently another image is beeing processed
+                        break;
+                }
             } finally {
                 if (is != null) {
                     try {
                         is.close();
                     } catch (IOException ioe2) {
-                        // FIXME It could happen when the image has already been downloaded
+                        // FIXME This could happen when the image has already been downloaded
                         return false;
                     }
                 }
@@ -413,6 +431,7 @@ public final class BluetoothMgr {
         }
     }
 
+    @Override
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
