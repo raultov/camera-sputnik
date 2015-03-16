@@ -15,13 +15,25 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     public static final String BLUETOOTH_DEVICE_NAME = "name";
     public static final String BLUETOOTH_DEVICE_MAC = "mac";
     public static final String BLUETOOTH_DEVICE_PAIRED = "paired";
+    
+    public static final String TABLE_IMAGES_DOWNLOADED = "image_downloaded";
+    public static final String IMAGES_DOWNLOADED_ID = "_id";
+    public static final String IMAGES_DOWNLOADED_FILENAME = "filename";
+    public static final String IMAGES_DOWNLOADED_DATE = "created_date";
+    
 
-    // Database creation sql statement
+    // Table bluetooth device creation sql statement
     private static final String TABLE_BLUETOOTH_DEVICE_CREATE = "create table "
             + TABLE_BLUETOOTH_DEVICE + "(" + BLUETOOTH_DEVICE_ID
             + " integer primary key autoincrement, " + BLUETOOTH_DEVICE_NAME
             + " text not null, " + BLUETOOTH_DEVICE_MAC + " text not null, "
             +  BLUETOOTH_DEVICE_PAIRED + " integer not null);";
+
+    // Table images downloaded creation sql statement
+    private static final String TABLE_IMAGES_DOWNLOADED_CREATE = "create table "
+            + TABLE_IMAGES_DOWNLOADED + "(" + IMAGES_DOWNLOADED_ID
+            + " integer primary key autoincrement, " + IMAGES_DOWNLOADED_FILENAME
+            + " text not null, " + IMAGES_DOWNLOADED_DATE + " date default CURRENT_DATE);";
     
     public ConfigurationHelper(Context context) {
         super(context, GeneralHelper.DATABASE_NAME, null, GeneralHelper.DATABASE_VERSION);
@@ -36,6 +48,7 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_BLUETOOTH_DEVICE_CREATE);
+        db.execSQL(TABLE_IMAGES_DOWNLOADED_CREATE);
     }
 
     /**
@@ -64,6 +77,7 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BLUETOOTH_DEVICE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES_DOWNLOADED);
         onCreate(db);
     }
 }

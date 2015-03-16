@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.helpers.ConfigurationHelper;
 
 import java.util.ArrayList;
@@ -41,6 +42,10 @@ public class ConfigurationDao {
         configurationHelper.close();
     }
 
+    ////////////////////***********************************************////////////////////////
+    //////////////////// BLUETOOTH DEVICE SECTION  ////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    
     public BDeviceSputnik createBluetoothDevice(String name, String mac, Boolean paired) {
         ContentValues values = new ContentValues();
         values.put(ConfigurationHelper.BLUETOOTH_DEVICE_NAME, name);
@@ -112,5 +117,15 @@ public class ConfigurationDao {
         bDeviceSputnik.setMac(cursor.getString(2));
         bDeviceSputnik.setPaired(cursor.getInt(3) == 1);
         return bDeviceSputnik;
+    }
+
+    ////////////////////***********************************************////////////////////////
+    //////////////////// IMAGES DOWNLOADED SECTION  ////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////    
+
+    public ImageSputnik createDownloadedImage(String filename) {
+        // TODO
+        
+        return null;
     }
 }
