@@ -33,7 +33,12 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     private static final String TABLE_IMAGES_DOWNLOADED_CREATE = "create table "
             + TABLE_IMAGES_DOWNLOADED + "(" + IMAGES_DOWNLOADED_ID
             + " integer primary key autoincrement, " + IMAGES_DOWNLOADED_FILENAME
-            + " text not null, " + IMAGES_DOWNLOADED_DATE + " date default CURRENT_DATE);";
+            + " text not null, " + IMAGES_DOWNLOADED_DATE + " datetime default CURRENT_TIMESTAMP);";
+    
+    // Populate images downloaded Table
+    private static final String TABLE_IMAGES_DOWNLOADED_POPULATE = "insert into table "
+            + TABLE_IMAGES_DOWNLOADED + " (" + IMAGES_DOWNLOADED_ID +"," + IMAGES_DOWNLOADED_FILENAME
+            + ") values(0, '0.jpg')";
     
     public ConfigurationHelper(Context context) {
         super(context, GeneralHelper.DATABASE_NAME, null, GeneralHelper.DATABASE_VERSION);
@@ -49,6 +54,7 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_BLUETOOTH_DEVICE_CREATE);
         db.execSQL(TABLE_IMAGES_DOWNLOADED_CREATE);
+        db.execSQL(TABLE_IMAGES_DOWNLOADED_POPULATE);
     }
 
     /**

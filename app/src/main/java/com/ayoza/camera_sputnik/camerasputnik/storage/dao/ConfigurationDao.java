@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.util.Log;
 
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
@@ -29,6 +30,12 @@ public class ConfigurationDao {
             ConfigurationHelper.BLUETOOTH_DEVICE_MAC,
             ConfigurationHelper.BLUETOOTH_DEVICE_PAIRED
             };
+
+    private String[] allColumnsImageDownloaded = {
+            ConfigurationHelper.IMAGES_DOWNLOADED_ID,
+            ConfigurationHelper.IMAGES_DOWNLOADED_FILENAME,
+            ConfigurationHelper.IMAGES_DOWNLOADED_DATE
+    };
 
     public ConfigurationDao(Context context) {
         configurationHelper = new ConfigurationHelper(context);
@@ -124,8 +131,77 @@ public class ConfigurationDao {
     ///////////////////////////////////////////////////////////////////////////////////////////    
 
     public ImageSputnik createDownloadedImage(String filename) {
+        ContentValues values = new ContentValues();
+        values.put(ConfigurationHelper.IMAGES_DOWNLOADED_FILENAME, filename);
+        long insertId = database.insert(ConfigurationHelper.TABLE_IMAGES_DOWNLOADED, null,
+                values);
+
+        Cursor cursor = database.query(ConfigurationHelper.TABLE_IMAGES_DOWNLOADED,
+                allColumnsImageDownloaded,
+                ConfigurationHelper.IMAGES_DOWNLOADED_ID + " = " + insertId, null,
+                null, null, null);
+        cursor.moveToFirst();
+        ImageSputnik imageSputnik = cursorToImage(cursor);
+        cursor.close();
+        
+        return imageSputnik;
+    }
+    
+    public ImageSputnik getLastInsertedDownloadedImage() {
+        
         // TODO
         
         return null;
     }
+
+    private ImageSputnik cursorToImage(Cursor cursor) {
+        ImageSputnik imageSputnik = new ImageSputnik();
+        imageSputnik.setId(cursor.getLong(0));
+        imageSputnik.setFilename(cursor.getString(1));
+        //imageSputnik.setCreateDate(cursor.getString(2));
+        return imageSputnik;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

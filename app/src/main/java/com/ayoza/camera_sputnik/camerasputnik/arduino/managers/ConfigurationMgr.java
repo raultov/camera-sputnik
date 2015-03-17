@@ -43,7 +43,7 @@ public final class ConfigurationMgr {
     
     public String getLastImageNameDownloaded() {
         configurationDao.open();
-        
+        // TODO
         configurationDao.close();
         
         return null;
