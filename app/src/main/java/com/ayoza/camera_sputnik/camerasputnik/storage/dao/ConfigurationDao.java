@@ -148,10 +148,23 @@ public class ConfigurationDao {
     }
     
     public ImageSputnik getLastInsertedDownloadedImage() {
+        ImageSputnik imageSputnik = null;
         
-        // TODO
+        Cursor cursor = database.query(ConfigurationHelper.IMAGES_DOWNLOADED_FILENAME,
+                allColumnsImageDownloaded,
+                null,
+                null, 
+                null, 
+                null,
+                ConfigurationHelper.IMAGES_DOWNLOADED_DATE + " DESC");
+
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            imageSputnik = cursorToImage(cursor);
+        }
+        cursor.close();
         
-        return null;
+        return imageSputnik;
     }
 
     private ImageSputnik cursorToImage(Cursor cursor) {

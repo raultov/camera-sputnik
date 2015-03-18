@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.ayoza.camera_sputnik.camerasputnik.storage.dao.ConfigurationDao;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 
 /**
  * This class is responsible for creating and managing settings
@@ -41,12 +42,18 @@ public final class ConfigurationMgr {
         configurationDao.close();
     }
     
-    public String getLastImageNameDownloaded() {
+    public ImageSputnik getLastImageNameDownloaded() {
         configurationDao.open();
-        // TODO
+        ImageSputnik imageSputnik = configurationDao.getLastInsertedDownloadedImage();
         configurationDao.close();
         
-        return null;
+        return imageSputnik;
+    }
+    
+    public void insertImageSputnik(ImageSputnik imageSputnik) {
+        configurationDao.open();
+        configurationDao.createDownloadedImage(imageSputnik.getFilename());
+        configurationDao.close();
     }
 
     @Override

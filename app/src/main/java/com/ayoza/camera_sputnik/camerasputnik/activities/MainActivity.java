@@ -1,5 +1,6 @@
 package com.ayoza.camera_sputnik.camerasputnik.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Looper;
 import android.os.Message;
@@ -28,7 +29,8 @@ public class MainActivity extends ActionBarActivity {
     private BluetoothMgr bluetoothMgr;
     private TextView bluetoothStatus;
     private Button devicesScanButton;
-    public static Handler mHandlerStatic = null;
+    private static Handler mHandlerStatic = null;
+    private Activity activity;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
         devicesScanButton = (Button) findViewById(R.id.scanDevicesButtonId);
 
         bluetoothMgr.registerReceiver(this);
+        activity = this;
 
         //paintComponents(bluetoothMgr.getConnected());
 
@@ -58,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
                         paintComponents(connected);
                         
                         if (connected) {
-                            DownloadingImageActivity taskDownload = new DownloadingImageActivity();
+                            DownloadingImageActivity taskDownload = new DownloadingImageActivity(activity);
                             taskDownload.execute();
                         } else {
                             

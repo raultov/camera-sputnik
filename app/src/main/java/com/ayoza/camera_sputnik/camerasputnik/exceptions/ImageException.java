@@ -10,6 +10,10 @@ public class ImageException extends  Exception {
     public static final int NOT_ENOUGH_FREE_SPACE = 3;
     public static final int ANOTHER_IMAGE_IS_BEEING_PROCESSED = 4;
     public static final int IMAGE_FILE_COULD_NOT_BE_CREATED = 5;
+    public static final int COULD_NOT_PARSE_IMAGE_NAME = 6;
+    public static final int NO_CURRENT_IMAGE_OPENED = 7;
+    public static final int PROBLEM_CLOSING_IMAGE_STREAM = 8;
+    public static final int PROBLEM_WRITING_IMAGE = 9;
     
     private int error;
     

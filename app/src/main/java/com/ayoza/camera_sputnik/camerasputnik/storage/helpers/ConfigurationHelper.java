@@ -52,8 +52,11 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Schema creation
         db.execSQL(TABLE_BLUETOOTH_DEVICE_CREATE);
         db.execSQL(TABLE_IMAGES_DOWNLOADED_CREATE);
+        
+        // Populate
         db.execSQL(TABLE_IMAGES_DOWNLOADED_POPULATE);
     }
 

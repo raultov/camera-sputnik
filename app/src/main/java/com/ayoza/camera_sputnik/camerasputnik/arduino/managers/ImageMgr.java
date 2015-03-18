@@ -5,9 +5,13 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.ImageException;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * This manager handles with images and storage
@@ -20,6 +24,8 @@ public class ImageMgr {
     private ConfigurationMgr configurationMgr = null;
     private static ImageMgr instance;
     private File currentImage = null;
+    private String currentFilename = "";
+    private FileOutputStream currentOutputStream = null;
     
     private ImageMgr(Activity activity) {
         configurationMgr = ConfigurationMgr.getInstance(activity);
@@ -48,11 +54,78 @@ public class ImageMgr {
             throw  new ImageException(ImageException.NOT_ENOUGH_FREE_SPACE);
         }
 
-        String lastImageNameDownloaded = configurationMgr.getLastImageNameDownloaded();
-        // TODO concatenate date to image file name
-        currentImage = new File(directory, "");
+        ImageSputnik lastImageNameDownloaded = configurationMgr.getLastImageNameDownloaded();
+        try {
+            int startDot = lastImageNameDownloaded.getFilename().indexOf('.');
+            String lastNumberStr = lastImageNameDownloaded.getFilename().substring(startDot);
+            Integer lastNumber = Integer.valueOf(lastNumberStr);
+            lastNumber++;
+            currentFilename = lastNumber.toString() + ".jpg";
+        } catch (Exception e) {
+            throw new ImageException(ImageException.COULD_NOT_PARSE_IMAGE_NAME);
+        }
+        
+        currentImage = new File(directory, currentFilename);
 
+        try {
+            currentOutputStream = new FileOutputStream(currentImage);
+        } catch (FileNotFoundException e) {
+            throw new ImageException(ImageException.IMAGE_FILE_COULD_NOT_BE_CREATED);
+        }
+    }
+    
+    public void deleteCurrentImage() throws ImageException {
+        if (currentOutputStream != null) {
+            try {
+                currentOutputStream.close();
+            } catch (IOException e) {
+                throw new ImageException(ImageException.PROBLEM_CLOSING_IMAGE_STREAM);
+            }
+        }
 
+        if (currentImage == null) {
+            throw new ImageException(ImageException.NO_CURRENT_IMAGE_OPENED);
+        }
+
+        currentImage.delete();
+
+        currentOutputStream = null;
+        currentImage = null;
+    }
+    
+    public void storeBytes(byte []buffer, int length) throws ImageException {
+        if (currentImage == null || currentOutputStream == null) {
+            throw new RuntimeException("There is no image opened",
+                    new ImageException(ImageException.NO_CURRENT_IMAGE_OPENED));
+        }
+
+        try {
+            currentOutputStream.write(buffer, 0, length);
+        } catch (IOException ioe) {
+            throw new ImageException(ImageException.PROBLEM_WRITING_IMAGE);
+        }
+    }
+    
+    public void closeCurrentImage() throws ImageException {
+        if (currentOutputStream != null) {
+            try {
+                currentOutputStream.close();
+            } catch (IOException e) {
+                throw new ImageException(ImageException.PROBLEM_CLOSING_IMAGE_STREAM);
+            }
+        }
+
+        if (currentImage == null) {
+            throw new ImageException(ImageException.NO_CURRENT_IMAGE_OPENED);
+        }
+
+        currentImage = null;
+        currentOutputStream = null;
+        
+        // TODO insert image data in DB
+        ImageSputnik imageSputnik = new ImageSputnik();
+        imageSputnik.setFilename(currentFilename);
+        configurationMgr.insertImageSputnik(imageSputnik);
     }
 
     /* Checks if external storage is available for read and write */

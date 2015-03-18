@@ -2,6 +2,7 @@ package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.widget.ProgressBar;
 
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
 
@@ -21,7 +22,7 @@ public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> 
     protected Boolean doInBackground(Void... params) {
 
         if (bluetoothMgr.getConnected()) {
-            
+            bluetoothMgr.receiveImage(ProgressBar progressBar);
         }
 
         for(int i = 0; i < 10; i++) {

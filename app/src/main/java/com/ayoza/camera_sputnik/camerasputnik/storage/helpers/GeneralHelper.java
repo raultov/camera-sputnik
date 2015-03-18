@@ -6,6 +6,6 @@ package com.ayoza.camera_sputnik.camerasputnik.storage.helpers;
 public final class GeneralHelper {
 
     public static final String DATABASE_NAME = "camera_sputnik.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     
 }

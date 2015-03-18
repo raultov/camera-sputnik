@@ -298,6 +298,9 @@ public final class BluetoothMgr {
                     Thread.currentThread().interrupt();
                 }
 
+                imageMgr = ImageMgr.getInstance(activity);
+                imageMgr.startNewImage(length);
+
                 byte[] buffer = new byte[MAX_EXPECTED_DATA];
                 int i = 0;
                 initialTime = System.currentTimeMillis();
@@ -306,10 +309,7 @@ public final class BluetoothMgr {
                     if (is.available() > 0) {
                         lengthReadBytes = is.read(buffer, 0, MAX_EXPECTED_DATA);
                         
-                        // TODO call here imageMgr in order to store new image
-                        imageMgr = ImageMgr.getInstance(activity);
-                        imageMgr.startNewImage(length);
-                        
+                        imageMgr.storeBytes(buffer, lengthReadBytes);
                         
                         i += lengthReadBytes;
                     }
@@ -318,8 +318,11 @@ public final class BluetoothMgr {
                 }
                 
                 if (i < length) {
+                    imageMgr.deleteCurrentImage();
                     return false;
                 }
+
+                imageMgr.closeCurrentImage();
 
                 // send an 'OK' message to camera sputnik device
                 outputStream = bs.getOutputStream();
@@ -345,7 +348,22 @@ public final class BluetoothMgr {
                         // TODO inform with toast that there is not enough free space
                         break;
                     case ImageException.ANOTHER_IMAGE_IS_BEEING_PROCESSED:
-                        // TODO inform with toast that currently another image is beeing processed
+                        // TODO inform with toast that currently another image is being processed
+                        break;
+                    case ImageException.COULD_NOT_PARSE_IMAGE_NAME:
+                        // TODO inform with toast that retrieved filename from DB is malformed
+                        break;
+                    case ImageException.IMAGE_FILE_COULD_NOT_BE_CREATED:
+                        // TODO inform with toast that there was an error creating image file
+                        break;
+                    case ImageException.PROBLEM_WRITING_IMAGE:
+                        // TODO inform with toast that there was an error writing image file
+                        break;
+                    case ImageException.NO_CURRENT_IMAGE_OPENED:
+                        // TODO inform with toast that no current image is opened
+                        break;
+                    case ImageException.PROBLEM_CLOSING_IMAGE_STREAM:
+                        // TODO inform with toast that there was a problem closing image stream
                         break;
                 }
             } finally {
