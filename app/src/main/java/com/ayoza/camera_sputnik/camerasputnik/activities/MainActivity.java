@@ -83,8 +83,9 @@ public class MainActivity extends ActionBarActivity {
                         if (connected) {
                             DownloadingImageActivity taskDownload = new DownloadingImageActivity(activity);
                             taskDownload.execute();
+                            Log.d(this.getClass().getCanonicalName(), "handle connected");
                         } else {
-                            
+                            Log.d(this.getClass().getCanonicalName(), "handle disconnected");
                         }
                         
                         break;

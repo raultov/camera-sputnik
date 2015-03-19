@@ -36,7 +36,7 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
             + " text not null, " + IMAGES_DOWNLOADED_DATE + " datetime default CURRENT_TIMESTAMP);";
     
     // Populate images downloaded Table
-    private static final String TABLE_IMAGES_DOWNLOADED_POPULATE = "insert into table "
+    private static final String TABLE_IMAGES_DOWNLOADED_POPULATE = "insert into "
             + TABLE_IMAGES_DOWNLOADED + " (" + IMAGES_DOWNLOADED_ID +"," + IMAGES_DOWNLOADED_FILENAME
             + ") values(0, '0.jpg')";
     

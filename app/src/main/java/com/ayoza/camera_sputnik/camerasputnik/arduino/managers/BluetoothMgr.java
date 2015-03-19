@@ -41,7 +41,7 @@ public final class BluetoothMgr {
 
     public static final int REQUEST_ENABLE_BT = 6666;
     private static final String UUID_HC06 = "00001101-0000-1000-8000-00805F9B34FB";
-    private static final String MAGIC_NUMBER = "5FRK14U0JKMTY71";
+    private static final String MAGIC_NUMBER = "FRK14U0JKMTY71";
     private static final String CONNECTION_REQUEST = "CAMERABIKE";
     private static final long TIMEOUT_READ_MS = 5000;
     private static final int HEADER_LENGTH = 10;
@@ -59,6 +59,7 @@ public final class BluetoothMgr {
     
     private Boolean connected = false;
     private List<BluetoothDevice> listDevicesFound;
+    private BluetoothDevice deviceConnected = null;
 
     private BluetoothMgr() {
 
@@ -160,11 +161,11 @@ public final class BluetoothMgr {
                         OutputStream outputStream = bs.getOutputStream();
                         outputStream.write(CONNECTION_REQUEST.getBytes());
                         outputStream.flush();
-                        try {
+                        /*try {
                             Thread.sleep(500);                 //500 milliseconds
                         } catch(InterruptedException ex) {
                             Thread.currentThread().interrupt();
-                        }
+                        }*/
                         
                         // Magic number is expected to be received to confirm this is a camera sputnik device
                         InputStream is = bs.getInputStream();
@@ -172,26 +173,32 @@ public final class BluetoothMgr {
                         int lengthReadBytes = 0;
                         long initialTime = System.currentTimeMillis();
                         long currentTime = initialTime;
+                        StringBuilder sb = new StringBuilder();
+                        int totalReadBytes = 0;
 
-                        while(lengthReadBytes != MAGIC_NUMBER.length() && (currentTime - initialTime) < TIMEOUT_READ_MS) {
+                        while(totalReadBytes != MAGIC_NUMBER.length() && (currentTime - initialTime) < TIMEOUT_READ_MS) {
                             if( is.available() > 0 ) {
                                 lengthReadBytes = is.read(buffer, 0, MAGIC_NUMBER.length());
+                                totalReadBytes += lengthReadBytes;
+                                sb.append(new String(buffer, 0, lengthReadBytes));
                             }
 
                             currentTime = System.currentTimeMillis();
                         }
-                        
-                        is.close();
-                        outputStream.close();
 
-                        String str = null;
-                        if (buffer != null) {
-                            str = new String(buffer);
-                            Log.d(BluetoothMgr.class.getSimpleName(), "Buffer received: " + str);
+                        if (sb.toString().length() > 0) {
+                            Log.d(BluetoothMgr.class.getSimpleName(), "totalReadBytes: "+ totalReadBytes + ", Buffer received: " + sb.toString());
                         }
                         
-                        if (str != null && str.equals(MAGIC_NUMBER)) {
+                        if (sb.toString().length() > 0 && sb.toString().equals(MAGIC_NUMBER)) {
+
+                            // Sends OK Response to confirm magic number was received
+                            outputStream.write(OK_RESPONSE.getBytes());
+                            outputStream.flush();
+                            Log.d(this.getClass().getSimpleName(), "OK response sent");
+                            
                             connected = true;
+                            deviceConnected = device;
                             // insert device in DB
                             BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
                             bDeviceSputnik.setName(device.getName());
@@ -204,6 +211,9 @@ public final class BluetoothMgr {
                             bs.close();
                             bs = null;
                         }
+
+                        is.close();
+                        outputStream.close();
 
                     } catch (IOException e) {
 
@@ -247,6 +257,15 @@ public final class BluetoothMgr {
             InputStream is = null;
             OutputStream outputStream = null;
             try {
+                bs = deviceConnected.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
+                bs.connect();
+
+                // send an 'OK' response to camera sputnik device in order to start
+                // image download
+                outputStream = bs.getOutputStream();
+                outputStream.write(OK_RESPONSE.getBytes());
+                outputStream.flush();
+                
                 // Image length is expected
                 is = bs.getInputStream();
                 byte[] header = new byte[HEADER_LENGTH];
@@ -254,29 +273,29 @@ public final class BluetoothMgr {
                 int lengthReadBytes = 0;
                 long initialTime = System.currentTimeMillis();
                 long currentTime = initialTime;
-                while (lengthReadBytes != HEADER_LENGTH && (currentTime - initialTime) < TIMEOUT_READ_MS) {
+                StringBuilder sb = new StringBuilder();
+                int totalReadBytes = 0;
+                
+                while (totalReadBytes != HEADER_LENGTH && (currentTime - initialTime) < TIMEOUT_READ_MS) {
                     if (is.available() > 0) {
                         lengthReadBytes = is.read(header, 0, HEADER_LENGTH);
+                        totalReadBytes += lengthReadBytes;
+                        sb.append(new String(header, 0, lengthReadBytes));
                     }
 
                     currentTime = System.currentTimeMillis();
                 }
 
-                String str = null;
-                if (header != null) {
-                    str = new String(header);
-                }
-                
-                if (str == null) {
+                if (sb.toString().length() != HEADER_LENGTH) {
                     return false;
                 }
 
-                Log.d(BluetoothMgr.class.getSimpleName(), "Header received: " + str);
+                Log.d(BluetoothMgr.class.getSimpleName(), "Header received: " + sb.toString());
 
-                int index = str.indexOf(HEADER_FILL_CHARACTER);
+                int index = sb.toString().indexOf(HEADER_FILL_CHARACTER);
                 int length = -1;
                 if (index != -1) {
-                    String lengthStr = str.substring(index);
+                    String lengthStr = sb.toString().substring(index);
 
                     try {
                         length = Integer.valueOf(lengthStr);
@@ -308,12 +327,12 @@ public final class BluetoothMgr {
                 while (i < length && (currentTime - initialTime) < TIMEOUT_READ_MS) {
                     if (is.available() > 0) {
                         lengthReadBytes = is.read(buffer, 0, MAX_EXPECTED_DATA);
-                        
-                        // Publish progress
-                        downloadingImageActivity.publishDownloadProgress(i, length);
+                       
                         imageMgr.storeBytes(buffer, lengthReadBytes);
                         
                         i += lengthReadBytes;
+                        // Publish progress
+                        downloadingImageActivity.publishDownloadProgress(i, length);
                     }
 
                     currentTime = System.currentTimeMillis();
@@ -366,6 +385,9 @@ public final class BluetoothMgr {
                         break;
                     case ImageException.PROBLEM_CLOSING_IMAGE_STREAM:
                         // TODO inform with toast that there was a problem closing image stream
+                        break;
+                    case ImageException.PROBLEM_REMOVING_IMAGE:
+                        // TODO inform with toast that there was a problem removing image
                         break;
                 }
                 

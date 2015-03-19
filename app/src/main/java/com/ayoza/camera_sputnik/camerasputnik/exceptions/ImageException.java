@@ -14,6 +14,7 @@ public class ImageException extends  Exception {
     public static final int NO_CURRENT_IMAGE_OPENED = 7;
     public static final int PROBLEM_CLOSING_IMAGE_STREAM = 8;
     public static final int PROBLEM_WRITING_IMAGE = 9;
+    public static final int PROBLEM_REMOVING_IMAGE = 10;
     
     private int error;
     

@@ -2,7 +2,6 @@ package com.ayoza.camera_sputnik.camerasputnik.arduino.managers;
 
 import android.app.Activity;
 import android.os.Environment;
-import android.util.Log;
 
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.ImageException;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
@@ -11,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * This manager handles with images and storage
@@ -87,9 +85,13 @@ public class ImageMgr {
             throw new ImageException(ImageException.NO_CURRENT_IMAGE_OPENED);
         }
 
-        currentImage.delete();
-
         currentOutputStream = null;
+        
+        if (!currentImage.delete()) {
+            currentImage = null;
+            throw new ImageException(ImageException.PROBLEM_REMOVING_IMAGE);
+        }
+
         currentImage = null;
     }
     
@@ -131,11 +133,7 @@ public class ImageMgr {
     /* Checks if external storage is available for read and write */
     private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     private File getAlbumStorageDir() throws ImageException {
