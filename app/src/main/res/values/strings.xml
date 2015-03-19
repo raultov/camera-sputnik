@@ -16,5 +16,7 @@
     <string name="cancel_device_list">Cancelar</string>
     <string name="scanning">Buscando…</string>
     <string name="scanning_devices">Buscando dispositivos</string>
+    <string name="downloadText">Descarga</string>
+    <string name="uploadText">Subida</string>
 
 </resources>

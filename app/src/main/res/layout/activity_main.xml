@@ -41,4 +41,64 @@
         android:paddingRight="20dp"
         android:paddingBottom="20dp" />
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_above="@+id/scanDevicesButtonId"
+        android:layout_below="@+id/bluetoothStatus">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/downloadText"
+                android:id="@+id/downloadText"
+                android:gravity="center_vertical"
+                android:textColor="#ff499235" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/downloadBar"
+                android:progressTint="#ff45ff15"
+                android:progressBackgroundTint="#ff2bfffa" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/uploadText"
+                android:id="@+id/uploadText"
+                android:gravity="center_vertical"
+                android:textColor="#ff920c0f" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/uploadBar"
+                android:indeterminate="false"
+                android:longClickable="false" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

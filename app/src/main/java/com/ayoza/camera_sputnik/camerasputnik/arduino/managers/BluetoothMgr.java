@@ -12,11 +12,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Message;
 import android.util.Log;
 
 import com.ayoza.camera_sputnik.camerasputnik.activities.BluetoothDevicesListActivity;
+import com.ayoza.camera_sputnik.camerasputnik.activities.DownloadingImageActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.LoadingActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.MainActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.ScanningDevicesActivity;
@@ -242,7 +242,7 @@ public final class BluetoothMgr {
         
     }
     
-    public boolean receiveImage() {
+    public boolean receiveImage(DownloadingImageActivity downloadingImageActivity) {
         if (connected) {
             InputStream is = null;
             OutputStream outputStream = null;
@@ -309,6 +309,8 @@ public final class BluetoothMgr {
                     if (is.available() > 0) {
                         lengthReadBytes = is.read(buffer, 0, MAX_EXPECTED_DATA);
                         
+                        // Publish progress
+                        downloadingImageActivity.publishDownloadProgress(i, length);
                         imageMgr.storeBytes(buffer, lengthReadBytes);
                         
                         i += lengthReadBytes;
@@ -366,6 +368,8 @@ public final class BluetoothMgr {
                         // TODO inform with toast that there was a problem closing image stream
                         break;
                 }
+                
+                return false;
             } finally {
                 if (is != null) {
                     try {
@@ -383,13 +387,13 @@ public final class BluetoothMgr {
                         // FIXME It could happen when the image has already been downloaded
                         return false;
                     }
-                }                
+                }
             }
 
         } else {
             return false;
         }
-        
+
         return true;
     }
 

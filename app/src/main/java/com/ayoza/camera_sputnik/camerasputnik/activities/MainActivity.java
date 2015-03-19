@@ -1,9 +1,13 @@
 package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
@@ -23,19 +28,23 @@ import android.os.Handler;
 public class MainActivity extends ActionBarActivity {
 
     public final static int CONNECTION_STATUS_MSG = 1;
-
     public static final int SCAN_DEVICES_LIST = 0;
+    public static final String DOWNLOAD_IMAGE_PROGRESS_EVENT = "download-image-progress-event";
 
     private BluetoothMgr bluetoothMgr;
     private TextView bluetoothStatus;
     private Button devicesScanButton;
     private static Handler mHandlerStatic = null;
     private Activity activity;
+    private BroadcastReceiver mMessageReceiver;
+    private ProgressBar downloadBar = null;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        downloadBar = (ProgressBar) findViewById(R.id.downloadBar);
 
         bluetoothMgr = BluetoothMgr.getInstance(this);
 
@@ -49,7 +58,18 @@ public class MainActivity extends ActionBarActivity {
         bluetoothMgr.registerReceiver(this);
         activity = this;
 
-        //paintComponents(bluetoothMgr.getConnected());
+        mMessageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Get extra data included in the Intent
+                int progress = intent.getIntExtra("progress", 0);
+                downloadBar.setProgress(progress);
+                Log.d(mMessageReceiver.getClass().getCanonicalName(), "Got progress: " + progress);
+            }
+        };
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter(DOWNLOAD_IMAGE_PROGRESS_EVENT));
 
         mHandlerStatic = new Handler(Looper.getMainLooper()) {
             @Override
@@ -117,8 +137,10 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         bluetoothMgr.close();
-
         bluetoothMgr.unRegisterReceiver(this);
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        
         super.onDestroy();
     }
 

@@ -51,6 +51,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.BluetoothDevicesListActivity" />
         </activity>
+
+        <!--
+        <activity
+            android:name="com.ayoza.camera_sputnik.camerasputnik.activities.DownloadingImageActivity"
+            android:label="Dowloading image screen"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        -->
         
     </application>
 
