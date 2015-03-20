@@ -55,7 +55,7 @@ public class ImageMgr {
         ImageSputnik lastImageNameDownloaded = configurationMgr.getLastImageNameDownloaded();
         try {
             int startDot = lastImageNameDownloaded.getFilename().indexOf('.');
-            String lastNumberStr = lastImageNameDownloaded.getFilename().substring(startDot);
+            String lastNumberStr = lastImageNameDownloaded.getFilename().substring(0, startDot);
             Integer lastNumber = Integer.valueOf(lastNumberStr);
             lastNumber++;
             currentFilename = lastNumber.toString() + ".jpg";
@@ -123,8 +123,7 @@ public class ImageMgr {
 
         currentImage = null;
         currentOutputStream = null;
-        
-        // TODO insert image data in DB
+
         ImageSputnik imageSputnik = new ImageSputnik();
         imageSputnik.setFilename(currentFilename);
         configurationMgr.insertImageSputnik(imageSputnik);

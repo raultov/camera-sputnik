@@ -43,10 +43,11 @@ public final class BluetoothMgr {
     private static final String UUID_HC06 = "00001101-0000-1000-8000-00805F9B34FB";
     private static final String MAGIC_NUMBER = "FRK14U0JKMTY71";
     private static final String CONNECTION_REQUEST = "CAMERABIKE";
-    private static final long TIMEOUT_READ_MS = 5000;
-    private static final int HEADER_LENGTH = 10;
+    private static final long TIMEOUT_READ_MS = 10000;
+    private static final int HEADER_LENGTH = 9;
     private static final char HEADER_FILL_CHARACTER = 'X';
     private static final String OK_RESPONSE = "OK";
+    private static final String OK1_RESPONSE = "OK1";
     private static final int MAX_EXPECTED_DATA = 10;
 
     private final BroadcastReceiver mReceiver;
@@ -295,7 +296,7 @@ public final class BluetoothMgr {
                 int index = sb.toString().indexOf(HEADER_FILL_CHARACTER);
                 int length = -1;
                 if (index != -1) {
-                    String lengthStr = sb.toString().substring(index);
+                    String lengthStr = sb.toString().substring(0, index);
 
                     try {
                         length = Integer.valueOf(lengthStr);
@@ -309,7 +310,7 @@ public final class BluetoothMgr {
                 Log.d(BluetoothMgr.class.getSimpleName(), "Length received: " + length);
                 // send an 'OK' message to camera sputnik device
                 outputStream = bs.getOutputStream();
-                outputStream.write(OK_RESPONSE.getBytes());
+                outputStream.write(OK1_RESPONSE.getBytes());
                 outputStream.flush();
                 try {
                     Thread.sleep(500);                 //500 milliseconds
@@ -333,6 +334,7 @@ public final class BluetoothMgr {
                         i += lengthReadBytes;
                         // Publish progress
                         downloadingImageActivity.publishDownloadProgress(i, length);
+                        initialTime = currentTime;
                     }
 
                     currentTime = System.currentTimeMillis();
@@ -343,8 +345,6 @@ public final class BluetoothMgr {
                     return false;
                 }
 
-                imageMgr.closeCurrentImage();
-
                 // send an 'OK' message to camera sputnik device
                 outputStream = bs.getOutputStream();
                 outputStream.write(OK_RESPONSE.getBytes());
@@ -354,8 +354,11 @@ public final class BluetoothMgr {
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
+
+                imageMgr.closeCurrentImage();
                 
             } catch (IOException ioe) {
+                ioe.printStackTrace();
                 return false;
             } catch (ImageException e) {
                 switch (e.getError()) {
@@ -391,6 +394,8 @@ public final class BluetoothMgr {
                         break;
                 }
                 
+                e.printStackTrace();
+                
                 return false;
             } finally {
                 if (is != null) {
@@ -398,6 +403,7 @@ public final class BluetoothMgr {
                         is.close();
                     } catch (IOException ioe2) {
                         // FIXME This could happen when the image has already been downloaded
+                        ioe2.printStackTrace();
                         return false;
                     }
                 }
@@ -407,6 +413,7 @@ public final class BluetoothMgr {
                         outputStream.close();
                     } catch (IOException ioe2) {
                         // FIXME It could happen when the image has already been downloaded
+                        ioe2.printStackTrace();
                         return false;
                     }
                 }

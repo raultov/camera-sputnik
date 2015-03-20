@@ -12,6 +12,8 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.helpers.ConfigurationHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,14 +151,19 @@ public class ConfigurationDao {
     
     public ImageSputnik getLastInsertedDownloadedImage() {
         ImageSputnik imageSputnik = null;
-        
-        Cursor cursor = database.query(ConfigurationHelper.IMAGES_DOWNLOADED_FILENAME,
-                allColumnsImageDownloaded,
-                null,
-                null, 
-                null, 
-                null,
-                ConfigurationHelper.IMAGES_DOWNLOADED_DATE + " DESC");
+
+        Cursor cursor = null;
+        try {
+            cursor = database.query(ConfigurationHelper.TABLE_IMAGES_DOWNLOADED,
+                    allColumnsImageDownloaded,
+                    null,
+                    null,
+                    null,
+                    null,
+                    ConfigurationHelper.IMAGES_DOWNLOADED_DATE + " DESC");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         cursor.moveToFirst();
         if (!cursor.isAfterLast()) {
@@ -171,7 +178,11 @@ public class ConfigurationDao {
         ImageSputnik imageSputnik = new ImageSputnik();
         imageSputnik.setId(cursor.getLong(0));
         imageSputnik.setFilename(cursor.getString(1));
-        //imageSputnik.setCreateDate(cursor.getString(2));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            imageSputnik.setCreateDate(simpleDateFormat.parse(cursor.getString(2)));
+        } catch (ParseException pe) {}
+        
         return imageSputnik;
     }
 }
