@@ -66,7 +66,7 @@
                 android:textColor="#ff499235" />
 
             <ProgressBar
-                style="?android:attr/progressBarStyleLarge"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/downloadBar"

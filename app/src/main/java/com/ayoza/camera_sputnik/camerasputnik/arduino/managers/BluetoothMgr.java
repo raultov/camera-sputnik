@@ -61,6 +61,9 @@ public final class BluetoothMgr {
     private Boolean connected = false;
     private List<BluetoothDevice> listDevicesFound;
     private BluetoothDevice deviceConnected = null;
+    private Boolean pairedDeviceExists = false;
+    
+    //private
 
     private BluetoothMgr() {
 
@@ -69,6 +72,7 @@ public final class BluetoothMgr {
         if (activity != null) {
             configurationMgr = ConfigurationMgr.getInstance(activity);
             bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
+            pairedDeviceExists = true;
         } else {
             bDeviceSputnik = null;
         }
@@ -200,12 +204,16 @@ public final class BluetoothMgr {
                             
                             connected = true;
                             deviceConnected = device;
-                            // insert device in DB
-                            BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
-                            bDeviceSputnik.setName(device.getName());
-                            bDeviceSputnik.setMac(device.getAddress());
-                            bDeviceSputnik.setPaired(true);
-                            configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);
+                            if (!pairedDeviceExists) {
+                                // insert device in DB if there is no device still inserted
+                                BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
+                                bDeviceSputnik.setName(device.getName());
+                                bDeviceSputnik.setMac(device.getAddress());
+                                bDeviceSputnik.setPaired(true);
+                                configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);
+                            }
+                            // bs.close();
+                            // bs = null;
                         } else {
                             // TODO inform device incompatible
                             connected = false;
@@ -238,6 +246,81 @@ public final class BluetoothMgr {
         Intent intent = new Intent(activityHost, LoadingActivity.class);
         activityHost.startActivityForResult(intent, BluetoothDevicesListActivity.LOADING_CONNECTING_ACTIVITY);
         Log.d(BluetoothMgr.class.getSimpleName(), "Loading activity started");
+    }
+
+    /**
+     * This method should be called only after calling void connect(final BluetoothDevice device, final Activity activityHost)
+     * in order to be sure that a first attempt of connection has been performed hence the variable
+     * deviceConnected should be valid
+     */
+    public void connect() {
+
+        if (deviceConnected != null) {
+            try {
+                bs = deviceConnected.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
+                bs.connect();
+
+                // Sends CONNECTION_REQUEST to wake up camera bike device
+                OutputStream outputStream = bs.getOutputStream();
+                outputStream.write(CONNECTION_REQUEST.getBytes());
+                outputStream.flush();
+
+                // Magic number is expected to be received to confirm this is a camera sputnik device
+                InputStream is = bs.getInputStream();
+                byte[] buffer = new byte[MAGIC_NUMBER.length()];
+                int lengthReadBytes = 0;
+                long initialTime = System.currentTimeMillis();
+                long currentTime = initialTime;
+                StringBuilder sb = new StringBuilder();
+                int totalReadBytes = 0;
+
+                while(totalReadBytes != MAGIC_NUMBER.length() && (currentTime - initialTime) < TIMEOUT_READ_MS) {
+                    if( is.available() > 0 ) {
+                        lengthReadBytes = is.read(buffer, 0, MAGIC_NUMBER.length());
+                        totalReadBytes += lengthReadBytes;
+                        sb.append(new String(buffer, 0, lengthReadBytes));
+                    }
+
+                    currentTime = System.currentTimeMillis();
+                }
+
+                if (sb.toString().length() > 0) {
+                    Log.d(BluetoothMgr.class.getSimpleName(), "totalReadBytes: "+ totalReadBytes + ", Buffer received: " + sb.toString());
+                }
+
+                if (sb.toString().length() > 0 && sb.toString().equals(MAGIC_NUMBER)) {
+                    // Sends OK Response to confirm magic number was received
+                    outputStream.write(OK_RESPONSE.getBytes());
+                    outputStream.flush();
+                    Log.d(this.getClass().getSimpleName(), "OK response sent");
+
+                    connected = true;
+
+                    if (!pairedDeviceExists) {
+                        // insert device in DB if there is no device still inserted
+                        BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
+                        bDeviceSputnik.setName(deviceConnected.getName());
+                        bDeviceSputnik.setMac(deviceConnected.getAddress());
+                        bDeviceSputnik.setPaired(true);
+                        configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);
+                    }
+                    // bs.close();
+                    // bs = null;
+                } else {
+                    // TODO inform device incompatible
+                    connected = false;
+                    bs.close();
+                    bs = null;
+                }
+
+                is.close();
+                outputStream.close();
+
+            } catch (IOException e) {
+
+            }
+        }
+        
     }
     
     public void disconnect() {
