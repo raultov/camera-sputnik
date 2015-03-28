@@ -18,6 +18,8 @@ public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> 
     private Activity activity;
     private Integer publishedProgress = null;
 
+    private Boolean stopDownloading = false;
+    
     public DownloadingImageActivity(Activity activity) {
         this.activity = activity;
         bluetoothMgr = BluetoothMgr.getInstance(activity);
@@ -30,16 +32,22 @@ public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> 
         if (bluetoothMgr != null && bluetoothMgr.getConnected()) {
             ret = bluetoothMgr.receiveImage(this);
         }
-
-        for(int i = 0; i < 10; i++) {
-            //tareaLarga();
-
-            //publishProgress(i*10);
-
-            if(isCancelled())
-                return false;
-        }
         
+        do {
+            if (bluetoothMgr != null) {
+                bluetoothMgr.connect();
+                ret = bluetoothMgr.receiveImage(this);
+
+                // restart progress bar to zero position
+                publishedProgress = 0;
+                Intent intent = new Intent(MainActivity.DOWNLOAD_IMAGE_PROGRESS_EVENT);
+                intent.putExtra("progress", 0);
+                LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
+            } else {
+                setStopDownloading(true);
+            }
+        } while (!stopDownloading);
+
         return ret;
     }
 
@@ -50,6 +58,11 @@ public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> 
             publishProgress(publishedProgress);
         }
     }
+
+    public void setStopDownloading(Boolean stopDownloading) {
+        this.stopDownloading = stopDownloading;
+    }
+    
     @Override
     protected void onProgressUpdate(Integer... values) {
         Intent intent = new Intent(MainActivity.DOWNLOAD_IMAGE_PROGRESS_EVENT);
