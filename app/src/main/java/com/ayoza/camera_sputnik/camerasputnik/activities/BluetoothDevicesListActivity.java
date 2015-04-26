@@ -77,23 +77,4 @@ public class BluetoothDevicesListActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /*
-    @Override
-    public void onBackPressed() {
-
-    }
-    */
-
-    /**
-     * Called when user clicks on cancel button sited on devices list
-     */
-    /*
-    public void onCancelDeviceListPressed(View view) {
-        Log.d(BluetoothDevicesListActivity.class.getSimpleName(), "Going back to main activity");
-        finish();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-    */
 }
