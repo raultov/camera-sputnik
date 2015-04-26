@@ -6,4 +6,7 @@
     <string name="cancel_device_list">Cancelar</string>
     <string name="downloadText">Descarga</string>
     <string name="uploadText">Subida</string>
+    <string name="gallery_button">Galería de fotos</string>
+    <string name="enlarge_image_gallery">Click para hacer más grande</string>
+    <string name="large_image_description">Imagen grande</string>
 </resources>

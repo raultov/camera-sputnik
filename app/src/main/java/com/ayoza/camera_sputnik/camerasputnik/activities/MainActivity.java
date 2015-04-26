@@ -194,7 +194,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Called when the user clicks the Scan Devices button */
+    /** Called when user clicks Scan Devices button */
     public void scanDevices(View view) {
         Log.d(MainActivity.class.getSimpleName(), "Starting Bluetooth Devices list");
         //finish();
@@ -202,6 +202,16 @@ public class MainActivity extends ActionBarActivity {
         //startActivity(intent);
 
         startActivityForResult(intent, SCAN_DEVICES_LIST);
+    }
+
+
+    /** Called when user clicks Scan Devices button */
+    public void showGallery(View view) {
+        Log.d(MainActivity.class.getSimpleName(), "Showing photo gallery");
+
+        //Intent intent = new Intent(this, BluetoothDevicesListActivity.class);
+
+        //startActivityForResult(intent, SCAN_DEVICES_LIST);
     }
 
     @Override
