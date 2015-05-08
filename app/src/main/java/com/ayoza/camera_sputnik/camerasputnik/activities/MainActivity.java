@@ -209,9 +209,9 @@ public class MainActivity extends ActionBarActivity {
     public void showGallery(View view) {
         Log.d(MainActivity.class.getSimpleName(), "Showing photo gallery");
 
-        //Intent intent = new Intent(this, BluetoothDevicesListActivity.class);
+        Intent intent = new Intent(this, GalleryActivity.class);
 
-        //startActivityForResult(intent, SCAN_DEVICES_LIST);
+        startActivityForResult(intent, 0);
     }
 
     @Override
