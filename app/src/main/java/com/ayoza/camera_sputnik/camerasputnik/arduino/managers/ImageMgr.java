@@ -15,7 +15,7 @@ import java.io.IOException;
  * This manager handles with images and storage
  * Created by raultov on 15/03/15.
  */
-public class ImageMgr {
+public class ImageMgr implements Cloneable {
     private static final String DIRECTORY_IMAGES = "CAMERA_SPUTNIK_IMAGES";
     private static final long SAFE_FREE_SPACE_AMOUNT = 10000L; // 10000 bytes
     

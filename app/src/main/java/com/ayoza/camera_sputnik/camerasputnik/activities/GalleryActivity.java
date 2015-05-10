@@ -10,28 +10,21 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Gallery;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
 
-import java.util.List;
-
 /**
  * Created by raultov on 26/04/15.
+ * This activity shows a gallery of pictures received previously through bluetooth
  */
 public class GalleryActivity extends Activity {
 
-    //variable for selection intent
-    private final int PICKER = 1;
-    //variable to store the currently selected image
-    private int currentPic = 0;
     //gallery object
-    private ViewPager picGallery;
+   // private ViewPager picGallery;
     //image view for larger display
-    private ImageView picView;
+    //private ImageView picView;
 
     PagerContainer mContainer;
 
@@ -59,7 +52,7 @@ public class GalleryActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-
+                System.out.println("nothing");
             }
         }
     }
