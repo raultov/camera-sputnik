@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
+ * This class handles with database creation and population
  * Created by raul on 3/02/15.
  */
 public class ConfigurationHelper extends SQLiteOpenHelper {
@@ -20,6 +21,13 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     public static final String IMAGES_DOWNLOADED_ID = "_id";
     public static final String IMAGES_DOWNLOADED_FILENAME = "filename";
     public static final String IMAGES_DOWNLOADED_DATE = "created_date";
+    
+    public static final String TABLE_POINT = "point";
+    public static final String POINT_ID = "_id";
+    public static final String POINT_LATITUDE = "latitude";
+    public static final String POINT_LONGITUDE = "longitude";
+    public static final String POINT_DATE = "created_date";
+    public static final String POINT_IMAGES_DOWNLOADED_ID = "id_image";
     
 
     // Table bluetooth device creation sql statement

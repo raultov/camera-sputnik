@@ -11,8 +11,8 @@ import java.util.List;
 public class TrackSputnik implements Serializable {
     private static final long serialVersionUID = -668423424624244484L;
 
-    private Long id;
-    private Date createDate;
+    private Long idTrackSputnik;
+    private Date date;
     
     private List<PointSputnik> pointSputniks = null;
     
