@@ -22,12 +22,17 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     public static final String IMAGES_DOWNLOADED_FILENAME = "filename";
     public static final String IMAGES_DOWNLOADED_DATE = "created_date";
     
+    public static final String TABLE_TRACK = "track";
+    public static final String TRACK_ID = "_id";
+    public static final String TRACK_DATE = "created_date";
+    
     public static final String TABLE_POINT = "point";
     public static final String POINT_ID = "_id";
     public static final String POINT_LATITUDE = "latitude";
     public static final String POINT_LONGITUDE = "longitude";
     public static final String POINT_DATE = "created_date";
     public static final String POINT_IMAGES_DOWNLOADED_ID = "id_image";
+    public static final String POINT_TRACK_ID = "id_track";
     
 
     // Table bluetooth device creation sql statement
@@ -47,6 +52,22 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     private static final String TABLE_IMAGES_DOWNLOADED_POPULATE = "insert into "
             + TABLE_IMAGES_DOWNLOADED + " (" + IMAGES_DOWNLOADED_ID +"," + IMAGES_DOWNLOADED_FILENAME
             + ") values(0, '0.jpg')";
+    
+    // Create table track
+    private static final String TABLE_TRACK_CREATE = "create table "
+            + TABLE_TRACK
+            ;
+    
+    // Create table Point
+    private static final String TABLE_POINT_CREATE = "create table " +
+            TABLE_POINT + " (" + POINT_ID + " integer primary key autoincrement, " +
+            POINT_LATITUDE + " real, " + POINT_LONGITUDE + " real," +
+            POINT_DATE + " datetime default CURRENT_TIMESTAMP), " +
+            POINT_IMAGES_DOWNLOADED_ID + "integer," +
+            "  FOREIGN KEY(" + POINT_IMAGES_DOWNLOADED_ID + 
+            ") REFERENCES " + TABLE_IMAGES_DOWNLOADED + 
+            "(" + IMAGES_DOWNLOADED_ID + "));"
+            ;
     
     public ConfigurationHelper(Context context) {
         super(context, GeneralHelper.DATABASE_NAME, null, GeneralHelper.DATABASE_VERSION);
