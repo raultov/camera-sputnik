@@ -16,6 +16,7 @@ public class PointSputnik implements Serializable {
     private Double longitude;
     private Date date;
     private ImageSputnik imageSputnik;
+    private TrackSputnik trackSputnik;
 
     public Long getIdPointSputnik() {
         return idPointSputnik;
@@ -57,4 +58,11 @@ public class PointSputnik implements Serializable {
         this.imageSputnik = imageSputnik;
     }
 
+    public TrackSputnik getTrackSputnik() {
+        return trackSputnik;
+    }
+
+    public void setTrackSputnik(TrackSputnik trackSputnik) {
+        this.trackSputnik = trackSputnik;
+    }
 }

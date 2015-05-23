@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.PointSputnik;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.helpers.ConfigurationHelper;
 
 import java.text.ParseException;
@@ -37,6 +39,20 @@ public class ConfigurationDao {
             ConfigurationHelper.IMAGES_DOWNLOADED_ID,
             ConfigurationHelper.IMAGES_DOWNLOADED_FILENAME,
             ConfigurationHelper.IMAGES_DOWNLOADED_DATE
+    };
+
+    private String[] allColumnsTrack = {
+            ConfigurationHelper.TRACK_ID,
+            ConfigurationHelper.TRACK_DATE
+    };
+
+    private String[] allColumnsPoint = {
+            ConfigurationHelper.POINT_ID,
+            ConfigurationHelper.POINT_DATE,
+            ConfigurationHelper.POINT_IMAGES_DOWNLOADED_ID,
+            ConfigurationHelper.POINT_LATITUDE,
+            ConfigurationHelper.POINT_LONGITUDE,
+            ConfigurationHelper.POINT_TRACK_ID
     };
 
     public ConfigurationDao(Context context) {
@@ -189,6 +205,61 @@ public class ConfigurationDao {
     ////////////////////***********************************************////////////////////////
     //////////////////// TRACKS AND GPS-POINTS SECTION  ////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////
+    
+    ////////////////////////////////// TRACKS ///////////////////////////////////////////////////
+    
+    public TrackSputnik createTrack() {
+        long insertId = database.insert(ConfigurationHelper.TABLE_TRACK, null, null);
+        Cursor cursor = database.query(ConfigurationHelper.TABLE_TRACK,
+                allColumnsTrack,
+                ConfigurationHelper.TRACK_ID + " = " + insertId, null,
+                null, null, null);
+
+        cursor.moveToFirst();
+        TrackSputnik trackSputnik = cursorToTrack(cursor);
+        cursor.close();
+        
+        return trackSputnik;
+    }
+    
+    public TrackSputnik getTrackById(Long trackId) {
+        Cursor cursor = database.query(ConfigurationHelper.TABLE_TRACK,
+                allColumnsTrack,
+                ConfigurationHelper.TRACK_ID + " = " + trackId, null,
+                null, null, null);
+
+        cursor.moveToFirst();
+        TrackSputnik trackSputnik = cursorToTrack(cursor);
+        cursor.close();
+
+        return trackSputnik;
+    }
+
+    private TrackSputnik cursorToTrack(Cursor cursor) {
+        TrackSputnik trackSputnik = new TrackSputnik();
+        trackSputnik.setIdTrackSputnik(cursor.getLong(0));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            trackSputnik.setDate(simpleDateFormat.parse(cursor.getString(1)));
+        } catch (ParseException pe) {}
+
+        return trackSputnik;
+    }
+
+    ////////////////////////////////// POINTS /////////////////////////////////////////////////
+    
+    
+    
+    private PointSputnik cursorToPoint(Cursor cursor) {
+        PointSputnik pointSputnik = new PointSputnik();
+        pointSputnik.setIdPointSputnik(cursor.getLong(0));
+        pointSputnik.setLatitude(cursor.getDouble(1));
+        
+        
+        return pointSputnik;
+    }
+    
+    
 }
 
 

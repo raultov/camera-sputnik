@@ -33,7 +33,6 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     public static final String POINT_DATE = "created_date";
     public static final String POINT_IMAGES_DOWNLOADED_ID = "id_image";
     public static final String POINT_TRACK_ID = "id_track";
-    
 
     // Table bluetooth device creation sql statement
     private static final String TABLE_BLUETOOTH_DEVICE_CREATE = "create table "
@@ -55,7 +54,8 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     
     // Create table track
     private static final String TABLE_TRACK_CREATE = "create table "
-            + TABLE_TRACK
+            + TABLE_TRACK + " (" + TRACK_ID + "integer primary key autoincrement," + TRACK_DATE
+            + " datetime default CURRENT_TIMESTAMP);"
             ;
     
     // Create table Point
@@ -64,9 +64,14 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
             POINT_LATITUDE + " real, " + POINT_LONGITUDE + " real," +
             POINT_DATE + " datetime default CURRENT_TIMESTAMP), " +
             POINT_IMAGES_DOWNLOADED_ID + "integer," +
+            POINT_TRACK_ID + "integer," +
             "  FOREIGN KEY(" + POINT_IMAGES_DOWNLOADED_ID + 
             ") REFERENCES " + TABLE_IMAGES_DOWNLOADED + 
-            "(" + IMAGES_DOWNLOADED_ID + "));"
+            "(" + IMAGES_DOWNLOADED_ID + ")," +
+            "  FOREIGN KEY(" + POINT_TRACK_ID +
+            ") REFERENCES " + TABLE_TRACK +
+            "(" + TRACK_ID + "))" +
+            ";"
             ;
     
     public ConfigurationHelper(Context context) {
@@ -84,6 +89,8 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
         // Schema creation
         db.execSQL(TABLE_BLUETOOTH_DEVICE_CREATE);
         db.execSQL(TABLE_IMAGES_DOWNLOADED_CREATE);
+        db.execSQL(TABLE_TRACK_CREATE);
+        db.execSQL(TABLE_POINT_CREATE);
         
         // Populate
         db.execSQL(TABLE_IMAGES_DOWNLOADED_POPULATE);
@@ -115,7 +122,11 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BLUETOOTH_DEVICE);
+
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_POINT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES_DOWNLOADED);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRACK);
+        
         onCreate(db);
     }
 }
