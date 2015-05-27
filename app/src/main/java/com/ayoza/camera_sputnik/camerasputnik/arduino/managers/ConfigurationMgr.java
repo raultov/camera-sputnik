@@ -5,6 +5,8 @@ import android.content.Context;
 import com.ayoza.camera_sputnik.camerasputnik.storage.dao.ConfigurationDao;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.PointSputnik;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
 
 /**
  * This class is responsible for creating and managing settings
@@ -28,6 +30,23 @@ public final class ConfigurationMgr {
         return instance;
     }
     
+    /*
+    
+     _     _            _              _   _     
+    | |__ | |_   _  ___| |_ ___   ___ | |_| |__  
+    | '_ \| | | | |/ _ \ __/ _ \ / _ \| __| '_ \ 
+    | |_) | | |_| |  __/ || (_) | (_) | |_| | | |
+    |_.__/|_|\__,_|\___|\__\___/ \___/ \__|_| |_|
+                                                 
+         _            _               
+      __| | _____   _(_) ___ ___  ___ 
+     / _` |/ _ \ \ / / |/ __/ _ \/ __|
+    | (_| |  __/\ V /| | (_|  __/\__ \
+     \__,_|\___| \_/ |_|\___\___||___/
+
+    
+     */
+    
     public BDeviceSputnik getPairedBluetoothDevice() {
         configurationDao.open();
         BDeviceSputnik bDeviceSputnik = configurationDao.getFirstPairedBluetoothDevice();
@@ -41,6 +60,17 @@ public final class ConfigurationMgr {
         configurationDao.createBluetoothDevice(bDeviceSputnik.getName(), bDeviceSputnik.getMac(), bDeviceSputnik.getPaired());
         configurationDao.close();
     }
+
+    /**
+      _
+     (_)_ __ ___   __ _  __ _  ___  ___
+     | | '_ ` _ \ / _` |/ _` |/ _ \/ __|
+     | | | | | | | (_| | (_| |  __/\__ \
+     |_|_| |_| |_|\__,_|\__, |\___||___/
+     |___/
+
+     */
+    
     
     public ImageSputnik getLastImageNameDownloaded() {
         configurationDao.open();
@@ -50,11 +80,50 @@ public final class ConfigurationMgr {
         return imageSputnik;
     }
     
-    public void insertImageSputnik(ImageSputnik imageSputnik) {
+    public Long insertImageSputnik(ImageSputnik imageSputnik) {
         configurationDao.open();
-        configurationDao.createDownloadedImage(imageSputnik.getFilename());
+        ImageSputnik imageSputnik1 = configurationDao.createDownloadedImage(imageSputnik.getFilename());
         configurationDao.close();
+
+        return imageSputnik1.getId();
     }
+    
+    /*
+     _                  _        
+    | |_ _ __ __ _  ___| | _____ 
+    | __| '__/ _` |/ __| |/ / __|
+    | |_| | | (_| | (__|   <\__ \
+     \__|_|  \__,_|\___|_|\_\___/                               
+    
+     */
+    
+    public TrackSputnik createTrackSputnik() {
+        configurationDao.open();
+        TrackSputnik trackSputnik = configurationDao.createTrack();
+        configurationDao.close();
+        
+        return trackSputnik;
+    }
+    
+    /*
+                 _       _       
+     _ __   ___ (_)_ __ | |_ ___ 
+    | '_ \ / _ \| | '_ \| __/ __|
+    | |_) | (_) | | | | | |_\__ \
+    | .__/ \___/|_|_| |_|\__|___/
+    |_|       
+      
+     */
+    
+    public Long createPointSputnik(Long trackId, Long imageId,
+                                   Double latitude, Double longitude) {
+        configurationDao.open();
+        PointSputnik pointSputnik = configurationDao.createPoint(trackId, imageId,latitude, longitude);
+        configurationDao.close();
+        
+        return pointSputnik.getIdPointSputnik();
+    }
+    
 
     @Override
     public Object clone() throws CloneNotSupportedException {

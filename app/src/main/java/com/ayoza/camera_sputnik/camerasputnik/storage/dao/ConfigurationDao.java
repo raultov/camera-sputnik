@@ -189,6 +189,20 @@ public class ConfigurationDao {
         
         return imageSputnik;
     }
+    
+    public ImageSputnik getImageById(Long imageId) {
+
+        Cursor cursor = database.query(ConfigurationHelper.TABLE_IMAGES_DOWNLOADED,
+                allColumnsImageDownloaded,
+                ConfigurationHelper.IMAGES_DOWNLOADED_ID + " = " + imageId, null,
+                null, null, null);
+
+        cursor.moveToFirst();
+        ImageSputnik imageSputnik = cursorToImage(cursor);
+        cursor.close();
+
+        return imageSputnik;
+    }
 
     private ImageSputnik cursorToImage(Cursor cursor) {
         ImageSputnik imageSputnik = new ImageSputnik();
@@ -248,13 +262,68 @@ public class ConfigurationDao {
 
     ////////////////////////////////// POINTS /////////////////////////////////////////////////
     
-    
+    public PointSputnik createPoint(Long trackId, Long imageId,
+                                        Double latitude, Double longitude) {
+        ContentValues values = new ContentValues();
+        values.put(ConfigurationHelper.POINT_TRACK_ID, trackId);
+        values.put(ConfigurationHelper.POINT_IMAGES_DOWNLOADED_ID, imageId);
+        values.put(ConfigurationHelper.POINT_LATITUDE, latitude);
+        values.put(ConfigurationHelper.POINT_LONGITUDE, longitude);
+        
+        long insertId = database.insert(ConfigurationHelper.TABLE_POINT, null,
+                values);
+
+        Cursor cursor = database.query(ConfigurationHelper.TABLE_POINT,
+                allColumnsPoint,
+                ConfigurationHelper.POINT_ID + " = " + insertId, null,
+                null, null, null);
+        cursor.moveToFirst();
+        PointSputnik pointSputnik = cursorToPoint(cursor);
+        cursor.close();
+
+        return pointSputnik;
+    }
+
+    public List<PointSputnik> getAllPointsFromTrack(Long trackId) {
+        List<PointSputnik> list = new ArrayList<>();
+
+        Cursor cursor = database.query(ConfigurationHelper.TABLE_POINT,
+                allColumnsPoint,
+                ConfigurationHelper.TRACK_ID + " = " + trackId,
+                null,
+                null,
+                null,
+                ConfigurationHelper.POINT_DATE + " ASC");
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(cursorToPoint(cursor));
+            cursor.moveToNext();
+        }
+
+        return list;
+    }
     
     private PointSputnik cursorToPoint(Cursor cursor) {
         PointSputnik pointSputnik = new PointSputnik();
         pointSputnik.setIdPointSputnik(cursor.getLong(0));
         pointSputnik.setLatitude(cursor.getDouble(1));
+        pointSputnik.setLongitude(cursor.getDouble(2));
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            pointSputnik.setDate(simpleDateFormat.parse(cursor.getString(3)));
+        } catch (ParseException pe) {}
         
+        Long imageId = cursor.getLong(4);
+        ImageSputnik imageSputnik = new ImageSputnik();
+        imageSputnik.setId(imageId);
+        pointSputnik.setImageSputnik(imageSputnik);
+        
+        Long trackId = cursor.getLong(5);
+        TrackSputnik trackSputnik = new TrackSputnik();
+        trackSputnik.setIdTrackSputnik(trackId);
+        pointSputnik.setTrackSputnik(trackSputnik);
         
         return pointSputnik;
     }

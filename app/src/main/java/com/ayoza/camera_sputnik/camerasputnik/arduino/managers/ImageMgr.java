@@ -127,6 +127,7 @@ public class ImageMgr implements Cloneable {
         ImageSputnik imageSputnik = new ImageSputnik();
         imageSputnik.setFilename(currentFilename);
         configurationMgr.insertImageSputnik(imageSputnik);
+        // TODO insert point here?
     }
 
     /* Checks if external storage is available for read and write */
