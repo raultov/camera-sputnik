@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +20,8 @@ import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
+import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
+import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
 
 import android.os.Handler;
 
@@ -38,6 +39,7 @@ public class MainActivity extends ActionBarActivity {
     private Activity activity;
     private BroadcastReceiver mMessageReceiver;
     private ProgressBar downloadBar = null;
+    private TrackMgr trackMgr;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class MainActivity extends ActionBarActivity {
         downloadBar = (ProgressBar) findViewById(R.id.downloadBar);
 
         bluetoothMgr = BluetoothMgr.getInstance(this);
+        trackMgr = TrackMgr.getInstance(this);
 
         if (!bluetoothMgr.isBluetoothEnabled()) {
             bluetoothMgr.showBluetoothTurnOnRequest(this);
@@ -95,7 +98,7 @@ public class MainActivity extends ActionBarActivity {
     }
     
     private void paintComponents(boolean connected) {
-        if (connected == false) {
+        if (!connected) {
             bluetoothStatus.setBackgroundResource(R.drawable.rounded_corner_red);
             bluetoothStatus.setPadding(20, 20, 20, 20);
             bluetoothStatus.setText(getResources().getString(R.string.desconectado_str_es));
@@ -154,7 +157,7 @@ public class MainActivity extends ActionBarActivity {
                 Log.d(MainActivity.class.getSimpleName(), "El usuario activó el Bluetooth");
 
                 boolean ret = bluetoothMgr.startDiscovery();
-                if (ret == true) {
+                if (ret) {
                     Log.d(MainActivity.class.getSimpleName(), "Discovery started");
                     Log.d(MainActivity.class.getSimpleName(), "Starting ScanningDevicesActivity");
                     Intent intent = new Intent(this, ScanningDevicesActivity.class);
@@ -164,12 +167,12 @@ public class MainActivity extends ActionBarActivity {
                     Log.d(MainActivity.class.getSimpleName(), "El Discovery no pudo comenzar");
                 }
             }
-        } else  if (requestCode == SCAN_DEVICES_LIST) {
+        } /*else  if (requestCode == SCAN_DEVICES_LIST) {
             if (resultCode == RESULT_OK) {
                 // Come back from scanned devices list
 
             }
-        }
+        }*/
     }
 
     @Override
@@ -212,6 +215,20 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, GalleryActivity.class);
 
         startActivityForResult(intent, 0);
+    }
+    
+    public void toggleCreateFinishTrack(View view) {
+        if (!trackMgr.isThereCurrentTrack()) {
+            try {
+                // open new track
+                trackMgr.startNewTrack();
+            } catch (TrackException e) {
+                // TODO inform with toast that a new track could not be open
+            }
+        } else {
+            // close current track
+            trackMgr.closeCurrentTrack();
+        }
     }
 
     @Override

@@ -108,7 +108,7 @@ public class ImageMgr implements Cloneable {
         }
     }
     
-    public void closeCurrentImage() throws ImageException {
+    public Long closeCurrentImage() throws ImageException {
         if (currentOutputStream != null) {
             try {
                 currentOutputStream.close();
@@ -126,8 +126,7 @@ public class ImageMgr implements Cloneable {
 
         ImageSputnik imageSputnik = new ImageSputnik();
         imageSputnik.setFilename(currentFilename);
-        configurationMgr.insertImageSputnik(imageSputnik);
-        // TODO insert point here?
+        return configurationMgr.insertImageSputnik(imageSputnik);
     }
 
     /* Checks if external storage is available for read and write */

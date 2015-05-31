@@ -21,6 +21,7 @@ import com.ayoza.camera_sputnik.camerasputnik.activities.LoadingActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.MainActivity;
 import com.ayoza.camera_sputnik.camerasputnik.activities.ScanningDevicesActivity;
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.ImageException;
+import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
 import com.ayoza.camera_sputnik.camerasputnik.interfaces.OnBackgroundListener;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.BDeviceSputnik;
 
@@ -56,6 +57,7 @@ public final class BluetoothMgr {
     private Boolean isBluetoothEnabled = null;
     private ConfigurationMgr configurationMgr = null;
     private ImageMgr imageMgr = null;
+    private TrackMgr trackMgr = null;
     private static Activity activity;
     
     private Boolean connected = false;
@@ -73,6 +75,8 @@ public final class BluetoothMgr {
             configurationMgr = ConfigurationMgr.getInstance(activity);
             bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
             pairedDeviceExists = true;
+
+            trackMgr = TrackMgr.getInstance(activity);
         } else {
             bDeviceSputnik = null;
         }
@@ -337,7 +341,7 @@ public final class BluetoothMgr {
     }
     
     public boolean receiveImage(DownloadingImageActivity downloadingImageActivity) {
-        if (connected) {
+        if (connected && trackMgr.isThereCurrentTrack()) {
             InputStream is = null;
             OutputStream outputStream = null;
             try {
@@ -438,7 +442,14 @@ public final class BluetoothMgr {
                     Thread.currentThread().interrupt();
                 }
 
-                imageMgr.closeCurrentImage();
+                Long imageId = imageMgr.closeCurrentImage();
+                
+                try {
+                    // FIXME add GPS location here. Presently it is hardcoded with 0.0, 0.0
+                    trackMgr.addPointToCurrentTrack(imageId, 0.0, 0.0);
+                } catch (TrackException te) {
+                    // TODO inform with toast that no current track is available
+                }
                 
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -518,7 +529,7 @@ public final class BluetoothMgr {
         return connected;
     }
 
-    public static BluetoothMgr getInstance(Activity activity) {
+    public static synchronized BluetoothMgr getInstance(Activity activity) {
         if (instance == null) {
             BluetoothMgr.activity = activity;
             instance = new BluetoothMgr();

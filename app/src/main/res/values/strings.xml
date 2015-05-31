@@ -25,5 +25,7 @@
     <string name="gallery_text">Fotos recibidas</string>
     <string name="enlarge_image_gallery">Click para hacer más grande</string>
     <string name="large_image_description">Imagen grande</string>
+    <string name="start_stop_track">Nuevo Recorrido</string>
+    <string name="stop_track">Terminar Recorrido</string>
 
 </resources>

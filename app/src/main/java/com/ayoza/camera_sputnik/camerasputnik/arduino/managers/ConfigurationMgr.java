@@ -21,7 +21,7 @@ public final class ConfigurationMgr {
     private ConfigurationMgr() {
     }
 
-    public static ConfigurationMgr getInstance(Context context) {
+    public static synchronized ConfigurationMgr getInstance(Context context) {
         if (instance == null) {
             instance = new ConfigurationMgr();
             instance.configurationDao = new ConfigurationDao(context);
@@ -115,13 +115,13 @@ public final class ConfigurationMgr {
       
      */
     
-    public Long createPointSputnik(Long trackId, Long imageId,
+    public PointSputnik createPointSputnik(Long trackId, Long imageId,
                                    Double latitude, Double longitude) {
         configurationDao.open();
         PointSputnik pointSputnik = configurationDao.createPoint(trackId, imageId,latitude, longitude);
         configurationDao.close();
         
-        return pointSputnik.getIdPointSputnik();
+        return pointSputnik;
     }
     
 

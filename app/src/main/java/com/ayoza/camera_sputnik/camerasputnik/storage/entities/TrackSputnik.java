@@ -1,6 +1,7 @@
 package com.ayoza.camera_sputnik.camerasputnik.storage.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +36,12 @@ public class TrackSputnik implements Serializable {
     public List<PointSputnik> getPointSputniks() {
         return pointSputniks;
     }
+    
+    public void addPointSputnik(PointSputnik pointSputnik) {
+        if (pointSputniks == null) {
+            pointSputniks = new ArrayList<>();
+        }
 
-    public void setPointSputniks(List<PointSputnik> pointSputniks) {
-        this.pointSputniks = pointSputniks;
+        pointSputniks.add(pointSputnik);
     }
 }

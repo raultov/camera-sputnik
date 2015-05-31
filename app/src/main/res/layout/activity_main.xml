@@ -119,6 +119,23 @@
                 android:nestedScrollingEnabled="true" />
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/toggleButton"
+                android:checked="false"
+                android:textOn="@string/stop_track"
+                android:textOff="@string/start_stop_track"
+                android:onClick="toggleCreateFinishTrack" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
