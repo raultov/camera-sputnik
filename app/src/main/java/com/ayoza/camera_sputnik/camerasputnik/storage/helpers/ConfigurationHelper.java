@@ -54,7 +54,7 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     
     // Create table track
     private static final String TABLE_TRACK_CREATE = "create table "
-            + TABLE_TRACK + " (" + TRACK_ID + "integer primary key autoincrement," + TRACK_DATE
+            + TABLE_TRACK + " (" + TRACK_ID + " integer primary key autoincrement," + TRACK_DATE
             + " datetime default CURRENT_TIMESTAMP);"
             ;
     
@@ -62,9 +62,9 @@ public class ConfigurationHelper extends SQLiteOpenHelper {
     private static final String TABLE_POINT_CREATE = "create table " +
             TABLE_POINT + " (" + POINT_ID + " integer primary key autoincrement, " +
             POINT_LATITUDE + " real, " + POINT_LONGITUDE + " real," +
-            POINT_DATE + " datetime default CURRENT_TIMESTAMP), " +
-            POINT_IMAGES_DOWNLOADED_ID + "integer," +
-            POINT_TRACK_ID + "integer," +
+            POINT_DATE + " datetime default CURRENT_TIMESTAMP, " +
+            POINT_IMAGES_DOWNLOADED_ID + " integer," +
+            POINT_TRACK_ID + " integer," +
             "  FOREIGN KEY(" + POINT_IMAGES_DOWNLOADED_ID + 
             ") REFERENCES " + TABLE_IMAGES_DOWNLOADED + 
             "(" + IMAGES_DOWNLOADED_ID + ")," +
