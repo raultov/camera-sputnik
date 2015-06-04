@@ -41,7 +41,9 @@ public final class BluetoothMgr {
     private static BluetoothMgr instance = null;
 
     public static final int REQUEST_ENABLE_BT = 6666;
-    private static final String UUID_HC06 = "00001101-0000-1000-8000-00805F9B34FB";
+    private static final String UUID_HC06 = "00001101-0000-1000-8000-00805f9b34fb";
+    //private static final String UUID_HC06 = "00000000-0000-1000-8000-00805f9b34fb";
+    //00001101-0000-1000-8000-00805f9b34fb
     private static final String MAGIC_NUMBER = "FRK14U0JKMTY71";
     private static final String CONNECTION_REQUEST = "CAMERABIKE";
     private static final long TIMEOUT_READ_MS = 10000;
@@ -74,7 +76,10 @@ public final class BluetoothMgr {
         if (activity != null) {
             configurationMgr = ConfigurationMgr.getInstance(activity);
             bDeviceSputnik = configurationMgr.getPairedBluetoothDevice();
-            pairedDeviceExists = true;
+
+            if (bDeviceSputnik != null) {
+                pairedDeviceExists = true;
+            }
 
             trackMgr = TrackMgr.getInstance(activity);
         } else {
@@ -163,7 +168,11 @@ public final class BluetoothMgr {
 
                 if (device != null) {
                     try {
+
+                        Log.d(BluetoothMgr.class.getName(), device.getName());
+                        //Log.d(BluetoothMgr.class.getName(), String.valueOf(device.setPin(pin)));
                         bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
+                        //bs = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
                         bs.connect();
         
                         // Sends CONNECTION_REQUEST to wake up camera bike device
@@ -229,7 +238,7 @@ public final class BluetoothMgr {
                         outputStream.close();
 
                     } catch (IOException e) {
-
+                        e.printStackTrace();
                     }
                 }
 

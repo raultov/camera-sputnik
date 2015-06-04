@@ -17,6 +17,7 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.helpers.ConfigurationHelpe
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,6 +58,10 @@ public class ConfigurationDao {
 
     public ConfigurationDao(Context context) {
         configurationHelper = new ConfigurationHelper(context);
+
+        /*SQLiteDatabase YourDatabaseName;
+        YourDatabaseName = configurationHelper.getWritableDatabase();
+        configurationHelper.onUpgrade(YourDatabaseName, 1, 2);*/
     }
 
     public void open() throws SQLException {
@@ -223,7 +228,10 @@ public class ConfigurationDao {
     ////////////////////////////////// TRACKS ///////////////////////////////////////////////////
     
     public TrackSputnik createTrack() {
-        long insertId = database.insert(ConfigurationHelper.TABLE_TRACK, null, null);
+        ContentValues values = new ContentValues();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        values.put(ConfigurationHelper.TRACK_DATE, simpleDateFormat.format(new Date()));
+        long insertId = database.insert(ConfigurationHelper.TABLE_TRACK, null, values);
         Cursor cursor = database.query(ConfigurationHelper.TABLE_TRACK,
                 allColumnsTrack,
                 ConfigurationHelper.TRACK_ID + " = " + insertId, null,
