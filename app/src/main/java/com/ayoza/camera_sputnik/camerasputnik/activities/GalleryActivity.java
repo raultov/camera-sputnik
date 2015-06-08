@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
+import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
 
 /**
@@ -26,11 +27,17 @@ public class GalleryActivity extends Activity {
     //image view for larger display
     //private ImageView picView;
 
+    private TrackMgr trackMgr;
+
     PagerContainer mContainer;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+
+        trackMgr = TrackMgr.getInstance(this);
+
+        //trackMgr.
 
         mContainer = (PagerContainer) findViewById(R.id.pager_container);
 

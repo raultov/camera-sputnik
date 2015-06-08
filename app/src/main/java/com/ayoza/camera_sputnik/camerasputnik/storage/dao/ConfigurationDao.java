@@ -257,6 +257,12 @@ public class ConfigurationDao {
         return trackSputnik;
     }
 
+    public List<ImageSputnik> getImagesFromTrack(Long trackId) {
+        // TODO continue here
+
+        return null;
+    }
+
     private TrackSputnik cursorToTrack(Cursor cursor) {
         TrackSputnik trackSputnik = new TrackSputnik();
         trackSputnik.setIdTrackSputnik(cursor.getLong(0));

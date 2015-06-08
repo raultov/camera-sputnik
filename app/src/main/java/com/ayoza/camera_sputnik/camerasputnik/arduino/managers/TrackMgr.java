@@ -3,8 +3,11 @@ package com.ayoza.camera_sputnik.camerasputnik.arduino.managers;
 import android.app.Activity;
 
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.PointSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
+
+import java.util.List;
 
 /**
  * Created by raultov on 27/05/15.
@@ -62,6 +65,14 @@ public class TrackMgr {
                                                                     latitude, longitude);
         
         currentTrack.addPointSputnik(pointSputnik);
+    }
+
+    public List<ImageSputnik> getImagesFromCurrentTrack() {
+
+        currentTrack.getPointSputniks().get(0).get
+        //configurationMgr.g
+
+        return null;
     }
     
     public void closeCurrentTrack() {
