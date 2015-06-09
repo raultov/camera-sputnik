@@ -8,6 +8,8 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.PointSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
 
+import java.util.List;
+
 /**
  * This class is responsible for creating and managing settings
  *
@@ -86,6 +88,14 @@ public final class ConfigurationMgr {
         configurationDao.close();
 
         return imageSputnik1.getId();
+    }
+
+    public List<ImageSputnik> getAllImagesFromTrack(Long idTrack) {
+        configurationDao.open();
+        List<ImageSputnik> images = configurationDao.getImagesFromTrack(idTrack);
+        configurationDao.close();
+
+        return images;
     }
     
     /*

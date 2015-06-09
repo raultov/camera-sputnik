@@ -14,7 +14,11 @@ import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
+import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
+
+import java.util.List;
 
 /**
  * Created by raultov on 26/04/15.
@@ -37,7 +41,16 @@ public class GalleryActivity extends Activity {
 
         trackMgr = TrackMgr.getInstance(this);
 
-        //trackMgr.
+        List<ImageSputnik> currentImages = null;
+        try {
+            currentImages = trackMgr.getAllImagesFromCurrentTrack();
+        } catch (TrackException e) {
+            e.printStackTrace();
+
+        }
+
+        // TODO continue here
+
 
         mContainer = (PagerContainer) findViewById(R.id.pager_container);
 

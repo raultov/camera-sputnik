@@ -67,12 +67,12 @@ public class TrackMgr {
         currentTrack.addPointSputnik(pointSputnik);
     }
 
-    public List<ImageSputnik> getImagesFromCurrentTrack() {
+    public List<ImageSputnik> getAllImagesFromCurrentTrack() throws TrackException {
+        if (currentTrack == null) {
+            throw new TrackException(TrackException.NO_CURRENT_TRACK_AVAILABLE);
+        }
 
-        currentTrack.getPointSputniks().get(0).get
-        //configurationMgr.g
-
-        return null;
+        return configurationMgr.getAllImagesFromTrack(currentTrack.getIdTrackSputnik());
     }
     
     public void closeCurrentTrack() {
