@@ -262,7 +262,7 @@ public class ConfigurationDao {
         StringBuilder query = new StringBuilder();
         query.append("SELECT * FROM ");
         query.append("image_downloaded i ");
-        query.append("INNER JOIN point p ON i.id_image = p.id_image ");
+        query.append("INNER JOIN point p ON i._id = p.id_image ");
         query.append("WHERE p.id_track = ? ORDER BY i.created_date ASC");
 
         Cursor cursor = database.rawQuery(query.toString(), new String[]{String.valueOf(trackId)});

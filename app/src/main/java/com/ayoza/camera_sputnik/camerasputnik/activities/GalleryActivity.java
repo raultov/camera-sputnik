@@ -49,8 +49,12 @@ public class GalleryActivity extends Activity {
 
         }
 
-        // TODO continue here
+        if (currentImages != null) {
+            for (ImageSputnik image : currentImages) {
 
+                System.out.println("image filename: " + image.getFilename());
+            }
+        }
 
         mContainer = (PagerContainer) findViewById(R.id.pager_container);
 
