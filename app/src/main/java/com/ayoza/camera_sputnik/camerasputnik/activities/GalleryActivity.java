@@ -49,6 +49,8 @@ public class GalleryActivity extends Activity {
 
         }
 
+        // TODO continue here
+
         if (currentImages != null) {
             for (ImageSputnik image : currentImages) {
 

@@ -36,13 +36,29 @@ public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> 
         do {
             if (bluetoothMgr != null) {
                 bluetoothMgr.connect();
+                try {
+                    // Sleep Thread for 1000 ms between connect and receive image in order
+                    // to get synchronized with arduino camera
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 ret = bluetoothMgr.receiveImage(this);
+
 
                 // restart progress bar to zero position
                 publishedProgress = 0;
                 Intent intent = new Intent(MainActivity.DOWNLOAD_IMAGE_PROGRESS_EVENT);
                 intent.putExtra("progress", 0);
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
+
+                // In order to reduce the running time of this Thread, it sleeps for x seconds
+                // As result the consumption of battery is reduced.
+                try {
+                    Thread.sleep(20000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
                 setStopDownloading(true);
             }

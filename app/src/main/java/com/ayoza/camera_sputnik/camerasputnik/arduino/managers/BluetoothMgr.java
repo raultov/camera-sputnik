@@ -2,6 +2,7 @@ package com.ayoza.camera_sputnik.camerasputnik.arduino.managers;
 
 /**
  * Created by raul on 18/01/15.
+ * Manages bluetooth communications
  */
 
 import android.app.Activity;
