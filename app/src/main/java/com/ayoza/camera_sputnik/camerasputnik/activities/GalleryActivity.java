@@ -2,15 +2,15 @@ package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
@@ -30,16 +30,13 @@ public class GalleryActivity extends Activity {
    // private ViewPager picGallery;
     //image view for larger display
     //private ImageView picView;
-
-    private TrackMgr trackMgr;
-
     PagerContainer mContainer;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        trackMgr = TrackMgr.getInstance(this);
+        TrackMgr trackMgr = TrackMgr.getInstance(this);
 
         List<ImageSputnik> currentImages = null;
         try {
@@ -48,8 +45,6 @@ public class GalleryActivity extends Activity {
             e.printStackTrace();
 
         }
-
-        // TODO continue here
 
         if (currentImages != null) {
             for (ImageSputnik image : currentImages) {
@@ -61,7 +56,7 @@ public class GalleryActivity extends Activity {
         mContainer = (PagerContainer) findViewById(R.id.pager_container);
 
         ViewPager pager = mContainer.getViewPager();
-        PagerAdapter adapter = new GalleryAdapter();
+        PagerAdapter adapter = new GalleryAdapter(currentImages);
         pager.setAdapter(adapter);
         //Necessary or the pager will only have one extra page to show
         // make this at least however many pages you can see
@@ -91,15 +86,35 @@ public class GalleryActivity extends Activity {
     //Nothing special about this adapter, just throwing up colored views for demo
     private class GalleryAdapter extends PagerAdapter {
 
+        private List<ImageSputnik> images = null;
+
+        public GalleryAdapter(List<ImageSputnik> images) {
+            this.images = images;
+        }
+
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            TextView view = new TextView(GalleryActivity.this);
+            //TextView view = new TextView(GalleryActivity.this);
+
+            ImageSputnik imageSputnik = images.get(position);
+            ImageView jpgView = new ImageView(GalleryActivity.this);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 2;
+
+            // TODO set full path for filename
+            Bitmap bm = BitmapFactory.decodeFile(imageSputnik.getFilename(), options);
+            jpgView.setImageBitmap(bm);
+
+/*
             view.setText("Item "+position);
             view.setGravity(Gravity.CENTER);
             view.setBackgroundColor(Color.argb(255, position * 50, position * 10, position * 50));
+            */
 
-            container.addView(view);
-            return view;
+            //container.addView(view);
+            container.addView(jpgView);
+            //return view;
+            return jpgView;
         }
 
         @Override
@@ -109,7 +124,7 @@ public class GalleryActivity extends Activity {
 
         @Override
         public int getCount() {
-            return 5;
+            return images != null ? images.size() : 0;
         }
 
         @Override
