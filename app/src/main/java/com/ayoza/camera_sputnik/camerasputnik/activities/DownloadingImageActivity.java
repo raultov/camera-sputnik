@@ -14,6 +14,8 @@ import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
  */
 public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> {
 
+    private static final long TIME_BETWEEN_ATTEMPS = 40000L;
+
     private BluetoothMgr bluetoothMgr = null;
     private Activity activity;
     private Integer publishedProgress = null;
@@ -55,7 +57,7 @@ public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> 
                 // In order to reduce the running time of this Thread, it sleeps for x seconds
                 // As result the consumption of battery is reduced.
                 try {
-                    Thread.sleep(20000L);
+                    Thread.sleep(TIME_BETWEEN_ATTEMPS);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

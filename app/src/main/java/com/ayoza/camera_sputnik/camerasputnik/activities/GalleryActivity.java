@@ -11,13 +11,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
+import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
+import com.ayoza.camera_sputnik.camerasputnik.exceptions.ImageException;
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -30,13 +34,17 @@ public class GalleryActivity extends Activity {
    // private ViewPager picGallery;
     //image view for larger display
     //private ImageView picView;
-    PagerContainer mContainer;
+    private PagerContainer mContainer;
+
+    private ImageMgr imageMgr;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
         TrackMgr trackMgr = TrackMgr.getInstance(this);
+
+        imageMgr = ImageMgr.getInstance(this);
 
         List<ImageSputnik> currentImages = null;
         try {
@@ -101,19 +109,22 @@ public class GalleryActivity extends Activity {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 2;
 
-            // TODO set full path for filename
-            Bitmap bm = BitmapFactory.decodeFile(imageSputnik.getFilename(), options);
-            jpgView.setImageBitmap(bm);
+            if (imageMgr != null) {
+                try {
+                    File folder = imageMgr.getAlbumStorageDir();
+                    String fullPath = folder.getAbsolutePath() + "/" + imageSputnik.getFilename();
 
-/*
-            view.setText("Item "+position);
-            view.setGravity(Gravity.CENTER);
-            view.setBackgroundColor(Color.argb(255, position * 50, position * 10, position * 50));
-            */
+                    Bitmap bm = BitmapFactory.decodeFile(fullPath, options);
+                    jpgView.setImageBitmap(bm);
 
-            //container.addView(view);
-            container.addView(jpgView);
-            //return view;
+                   // RelativeLayout relativeLayout = new RelativeLayout();
+
+                    container.addView(jpgView);
+                } catch (ImageException e) {
+                    e.printStackTrace();
+                }
+            }
+
             return jpgView;
         }
 

@@ -135,7 +135,7 @@ public class ImageMgr implements Cloneable {
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    private File getAlbumStorageDir() throws ImageException {
+    public File getAlbumStorageDir() throws ImageException {
         // Get the directory for the user's public pictures directory. 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), DIRECTORY_IMAGES);
         

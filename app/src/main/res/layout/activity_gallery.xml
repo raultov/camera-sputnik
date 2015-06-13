@@ -18,8 +18,16 @@
         <android.support.v4.view.ViewPager
             android:layout_width="150dp"
             android:layout_height="100dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/my_image"
+            android:longClickable="false" />
     </com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer>
+
+    <view
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="android.support.v4.view.ViewPager"
+        android:id="@+id/view" />
 
     <TextView android:layout_width="fill_parent"
         android:layout_height="wrap_content"
