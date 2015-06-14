@@ -2,20 +2,25 @@ package com.ayoza.camera_sputnik.camerasputnik.gallery.entities;
 
 import android.content.Context;
 import android.graphics.Point;
+//import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
+//import android.widget.RelativeLayout;
 
 /**
  * Created by raultov on 8/05/15
+ * Images container
  */
 
 
 public class PagerContainer extends FrameLayout implements ViewPager.OnPageChangeListener {
 
-    private ViewPager mPager;
+    //private ViewPager mPager;
     private boolean mNeedsRedraw = false;
+
+    private ImageText imageText;
 
     public PagerContainer(Context context) {
         super(context);
@@ -45,15 +50,18 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
     @Override
     protected void onFinishInflate() {
         try {
-            mPager = (ViewPager) getChildAt(0);
-            mPager.setOnPageChangeListener(this);
+            //mPager = (ViewPager) getChildAt(0);
+            //mPager.setOnPageChangeListener(this);
+            imageText = (ImageText) getChildAt(0);
+            imageText.getImageView().setOnPageChangeListener(this);
         } catch (Exception e) {
             throw new IllegalStateException("The root child of PagerContainer must be a ViewPager");
         }
     }
 
     public ViewPager getViewPager() {
-        return mPager;
+        //return mPager;
+        return imageText.getImageView();
     }
 
     private Point mCenter = new Point();
@@ -78,7 +86,8 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
                 break;
         }
 
-        return mPager.dispatchTouchEvent(ev);
+        return imageText.getImageView().dispatchTouchEvent(ev);
+        //return mPager.dispatchTouchEvent(ev);
     }
 
     @Override
