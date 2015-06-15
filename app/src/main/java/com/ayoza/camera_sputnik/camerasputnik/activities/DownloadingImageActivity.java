@@ -14,7 +14,7 @@ import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
  */
 public class DownloadingImageActivity extends AsyncTask<Void, Integer, Boolean> {
 
-    private static final long TIME_BETWEEN_ATTEMPS = 40000L;
+    private static final long TIME_BETWEEN_ATTEMPS = 20000L;
 
     private BluetoothMgr bluetoothMgr = null;
     private Activity activity;

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
@@ -105,8 +106,12 @@ public class GalleryActivity extends Activity {
             //TextView view = new TextView(GalleryActivity.this);
 
             ImageSputnik imageSputnik = images.get(position);
+
             ImageView jpgView = new ImageView(GalleryActivity.this);
             BitmapFactory.Options options = new BitmapFactory.Options();
+
+            TextView textView = new TextView(GalleryActivity.this);
+
             options.inSampleSize = 2;
 
             if (imageMgr != null) {
@@ -117,9 +122,10 @@ public class GalleryActivity extends Activity {
                     Bitmap bm = BitmapFactory.decodeFile(fullPath, options);
                     jpgView.setImageBitmap(bm);
 
-                   // RelativeLayout relativeLayout = new RelativeLayout();
+                    textView.setText(imageSputnik.getId().toString());
 
                     container.addView(jpgView);
+                    container.addView(textView);
                 } catch (ImageException e) {
                     e.printStackTrace();
                 }
