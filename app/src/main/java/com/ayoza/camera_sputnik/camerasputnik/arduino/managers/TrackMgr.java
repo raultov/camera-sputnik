@@ -74,6 +74,10 @@ public class TrackMgr {
 
         return configurationMgr.getAllImagesFromTrack(currentTrack.getIdTrackSputnik());
     }
+
+    public List<ImageSputnik> getAllImagesFromLastTrack() throws TrackException {
+        return configurationMgr.getAllImagesFromLastTrack();
+    }
     
     public void closeCurrentTrack() {
         currentTrack = null;

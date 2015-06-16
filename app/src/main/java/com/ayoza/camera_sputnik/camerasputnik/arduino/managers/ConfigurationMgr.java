@@ -97,6 +97,14 @@ public final class ConfigurationMgr {
 
         return images;
     }
+
+    public List<ImageSputnik> getAllImagesFromLastTrack() {
+        configurationDao.open();
+        List<ImageSputnik> images = configurationDao.getImagesFromLastTrack();
+        configurationDao.close();
+
+        return images;
+    }
     
     /*
      _                  _        

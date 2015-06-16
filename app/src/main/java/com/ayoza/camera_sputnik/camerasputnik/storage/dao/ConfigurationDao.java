@@ -277,6 +277,29 @@ public class ConfigurationDao {
         return list;
     }
 
+    public List<ImageSputnik> getImagesFromLastTrack() {
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM ");
+        query.append("image_downloaded i ");
+        query.append("INNER JOIN point p ON i._id = p.id_image ");
+        query.append("INNER JOIN track t ON p.id_track = t._id ");
+        query.append("WHERE t._id IN  ");
+        query.append("      (SELECT MAX(_id) FROM track) ");
+        query.append("ORDER BY i.created_date ASC");
+
+        Cursor cursor = database.rawQuery(query.toString(), null);
+
+        List<ImageSputnik> list = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(cursorToImage(cursor));
+            cursor.moveToNext();
+        }
+
+        return list;
+    }
+
     private TrackSputnik cursorToTrack(Cursor cursor) {
         TrackSputnik trackSputnik = new TrackSputnik();
         trackSputnik.setIdTrackSputnik(cursor.getLong(0));

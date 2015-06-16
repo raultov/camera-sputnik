@@ -17,6 +17,8 @@ public class ImageText extends RelativeLayout {
     private ViewPager imageView;
     private TextView textView;
 
+    private ViewPager.OnPageChangeListener mOnPageChangeListener;
+
     public ImageText(Context context) {
         super(context);
     }
@@ -59,4 +61,19 @@ public class ImageText extends RelativeLayout {
         return textView;
     }
 
+    public void setTextView(TextView textView) {
+        this.textView = textView;
+    }
+
+    public void setImageView(ViewPager imageView) {
+        this.imageView = imageView;
+    }
+
+    public ViewPager.OnPageChangeListener getmOnPageChangeListener() {
+        return mOnPageChangeListener;
+    }
+
+    public void setmOnPageChangeListener(ViewPager.OnPageChangeListener mOnPageChangeListener) {
+        this.mOnPageChangeListener = mOnPageChangeListener;
+    }
 }

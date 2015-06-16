@@ -50,7 +50,8 @@
                 android:textStyle="bold"
                 android:height="30dp"
                 android:gravity="center"
-                />
+                android:background="#ffff301a"
+                android:textColor="#ff33ff09" />
 
         </com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText>
     </com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer>

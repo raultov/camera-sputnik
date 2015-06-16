@@ -19,6 +19,7 @@ import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.ImageException;
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
+import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 
@@ -49,7 +50,8 @@ public class GalleryActivity extends Activity {
 
         List<ImageSputnik> currentImages = null;
         try {
-            currentImages = trackMgr.getAllImagesFromCurrentTrack();
+            //currentImages = trackMgr.getAllImagesFromCurrentTrack();
+            currentImages = trackMgr.getAllImagesFromLastTrack();
         } catch (TrackException e) {
             e.printStackTrace();
 
@@ -112,6 +114,8 @@ public class GalleryActivity extends Activity {
 
             TextView textView = new TextView(GalleryActivity.this);
 
+            ImageText imageText = new ImageText(GalleryActivity.this);
+
             options.inSampleSize = 2;
 
             if (imageMgr != null) {
@@ -124,14 +128,17 @@ public class GalleryActivity extends Activity {
 
                     textView.setText(imageSputnik.getId().toString());
 
-                    container.addView(jpgView);
-                    container.addView(textView);
+                    imageText.addView(jpgView);
+                    imageText.addView(textView);
+
+                    container.addView(imageText);
+                    //container.addView(jpgView);
                 } catch (ImageException e) {
                     e.printStackTrace();
                 }
             }
 
-            return jpgView;
+            return imageText;
         }
 
         @Override
