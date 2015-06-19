@@ -170,7 +170,7 @@ public final class BluetoothMgr {
                 if (device != null) {
                     try {
 
-                        Log.d(BluetoothMgr.class.getName(), device.getName());
+                        Log.d(BluetoothMgr.class.getName(), device.getName() == null ? "" : device.getName());
                         //Log.d(BluetoothMgr.class.getName(), String.valueOf(device.setPin(pin)));
                         bs = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
                         //bs = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString(UUID_HC06));
@@ -221,7 +221,7 @@ public final class BluetoothMgr {
                             if (!pairedDeviceExists) {
                                 // insert device in DB if there is no device still inserted
                                 BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
-                                bDeviceSputnik.setName(device.getName());
+                                bDeviceSputnik.setName(device.getName() == null ? "" : device.getName());
                                 bDeviceSputnik.setMac(device.getAddress());
                                 bDeviceSputnik.setPaired(true);
                                 configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);
@@ -313,7 +313,7 @@ public final class BluetoothMgr {
                     if (!pairedDeviceExists) {
                         // insert device in DB if there is no device still inserted
                         BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
-                        bDeviceSputnik.setName(deviceConnected.getName());
+                        bDeviceSputnik.setName(deviceConnected.getName() == null ? "" : deviceConnected.getName());
                         bDeviceSputnik.setMac(deviceConnected.getAddress());
                         bDeviceSputnik.setPaired(true);
                         configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);

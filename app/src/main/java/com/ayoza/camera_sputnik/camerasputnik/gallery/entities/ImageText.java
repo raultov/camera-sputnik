@@ -1,39 +1,51 @@
 package com.ayoza.camera_sputnik.camerasputnik.gallery.entities;
 
 import android.content.Context;
-import android.media.Image;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ayoza.camera_sputnik.camerasputnik.R;
 
 /**
  * Created by raul on 13/06/15.
  * This class contains a Image and a Text
  */
-public class ImageText extends RelativeLayout {
+public class ImageText extends LinearLayout {
 
-    private ViewPager imageView;
+    private ImageView imageView;
+
     private TextView textView;
 
-    private ViewPager.OnPageChangeListener mOnPageChangeListener;
+    private LayoutInflater mInflater;
+
+    //private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
     public ImageText(Context context) {
         super(context);
+        mInflater = LayoutInflater.from(context);
+        init();
     }
 
     public ImageText(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mInflater = LayoutInflater.from(context);
         init();
     }
 
     public ImageText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mInflater = LayoutInflater.from(context);
         init();
     }
 
     private void init() {
+        mInflater.inflate(R.layout.image_text_view, this, true);
+        imageView = (ImageView) this.findViewById(R.id.imageTextImageId);
+        textView = (TextView) this.findViewById(R.id.imageTextTextId);
+        textView.setText(" Custom RelativeLayout");
         //Disable clipping of children so non-selected pages are visible
         setClipChildren(false);
 
@@ -46,34 +58,21 @@ public class ImageText extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
         try {
-            imageView = (ViewPager) getChildAt(0);
+            imageView = (ImageView) getChildAt(0);
             textView = (TextView) getChildAt(1);
         } catch (Exception e) {
             throw new IllegalStateException("The first child of PagerContainer must be a ViewPager and the second one a TextView");
         }
     }
 
-    public ViewPager getImageView() {
-        return imageView;
-    }
 
     public TextView getTextView() {
         return textView;
     }
 
-    public void setTextView(TextView textView) {
-        this.textView = textView;
+    public ImageView getImageView() {
+        return imageView;
     }
 
-    public void setImageView(ViewPager imageView) {
-        this.imageView = imageView;
-    }
 
-    public ViewPager.OnPageChangeListener getmOnPageChangeListener() {
-        return mOnPageChangeListener;
-    }
-
-    public void setmOnPageChangeListener(ViewPager.OnPageChangeListener mOnPageChangeListener) {
-        this.mOnPageChangeListener = mOnPageChangeListener;
-    }
 }

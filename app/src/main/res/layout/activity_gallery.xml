@@ -16,14 +16,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#CCC">
-        <!--
+
         <android.support.v4.view.ViewPager
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:id="@+id/my_image"
             android:longClickable="false" />
-            -->
+
+        <!--
         <com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText
             android:id="@+id/imageText"
             android:layout_width="150dp"
@@ -38,22 +39,8 @@
                 android:layout_centerInParent="true"
                 android:longClickable="false"
                 />
-
-            <TextView
-                android:id="@+id/textLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_below="@id/imageLabel"
-                android:layout_centerInParent="true"
-                android:singleLine="true"
-                android:text="Prueba"
-                android:textStyle="bold"
-                android:height="30dp"
-                android:gravity="center"
-                android:background="#ffff301a"
-                android:textColor="#ff33ff09" />
-
         </com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText>
+        -->
     </com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer>
 
     <view

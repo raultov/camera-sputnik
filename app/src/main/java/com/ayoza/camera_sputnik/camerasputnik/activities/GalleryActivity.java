@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,7 @@ public class GalleryActivity extends Activity {
             ImageView jpgView = new ImageView(GalleryActivity.this);
             BitmapFactory.Options options = new BitmapFactory.Options();
 
-            TextView textView = new TextView(GalleryActivity.this);
+            //TextView textView = new TextView(GalleryActivity.this);
 
             ImageText imageText = new ImageText(GalleryActivity.this);
 
@@ -124,12 +125,13 @@ public class GalleryActivity extends Activity {
                     String fullPath = folder.getAbsolutePath() + "/" + imageSputnik.getFilename();
 
                     Bitmap bm = BitmapFactory.decodeFile(fullPath, options);
-                    jpgView.setImageBitmap(bm);
+                    //jpgView.setImageBitmap(bm);
+                    imageText.getImageView().setImageBitmap(bm);
+                    imageText.getTextView().setText(imageSputnik.getId().toString());
+                    //textView.setText(imageSputnik.getId().toString());
 
-                    textView.setText(imageSputnik.getId().toString());
-
-                    imageText.addView(jpgView);
-                    imageText.addView(textView);
+                    //imageText.addView(jpgView);
+                    //imageText.addView(textView);
 
                     container.addView(imageText);
                     //container.addView(jpgView);

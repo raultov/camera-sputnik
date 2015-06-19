@@ -17,10 +17,10 @@ import android.widget.FrameLayout;
 
 public class PagerContainer extends FrameLayout implements ViewPager.OnPageChangeListener {
 
-    //private ViewPager mPager;
+    private ViewPager mPager;
     private boolean mNeedsRedraw = false;
 
-    private ImageText imageText;
+    //private ImageText imageText;
 
     public PagerContainer(Context context) {
         super(context);
@@ -50,11 +50,11 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
     @Override
     protected void onFinishInflate() {
         try {
-            //mPager = (ViewPager) getChildAt(0);
-            //mPager.setOnPageChangeListener(this);
-            imageText = (ImageText) getChildAt(0);
+            mPager = (ViewPager) getChildAt(0);
+            mPager.setOnPageChangeListener(this);
+            //imageText = (ImageText) getChildAt(0);
             //imageText.getImageView().setOnPageChangeListener(this);
-            imageText.setmOnPageChangeListener(this);
+           // imageText.setmOnPageChangeListener(this);
 
         } catch (Exception e) {
             throw new IllegalStateException("The root child of PagerContainer must be a ViewPager");
@@ -62,9 +62,9 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
     }
 
     public ViewPager getViewPager() {
-        //return mPager;
+        return mPager;
         //return imageText;
-        return imageText.getImageView();
+        //return imageText.getImageView();
     }
 
     private Point mCenter = new Point();
@@ -89,8 +89,8 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
                 break;
         }
 
-        return imageText.getImageView().dispatchTouchEvent(ev);
-        //return mPager.dispatchTouchEvent(ev);
+        //return imageText.getImageView().dispatchTouchEvent(ev);
+        return mPager.dispatchTouchEvent(ev);
     }
 
     @Override
