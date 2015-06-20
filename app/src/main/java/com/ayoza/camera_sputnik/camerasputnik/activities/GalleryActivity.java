@@ -7,14 +7,10 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
@@ -25,19 +21,15 @@ import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by raultov on 26/04/15.
  * This activity shows a gallery of pictures received previously through bluetooth
  */
 public class GalleryActivity extends Activity {
-
-    //gallery object
-   // private ViewPager picGallery;
-    //image view for larger display
-    //private ImageView picView;
-    private PagerContainer mContainer;
 
     private ImageMgr imageMgr;
 
@@ -51,6 +43,7 @@ public class GalleryActivity extends Activity {
 
         List<ImageSputnik> currentImages = null;
         try {
+            // FIXME
             //currentImages = trackMgr.getAllImagesFromCurrentTrack();
             currentImages = trackMgr.getAllImagesFromLastTrack();
         } catch (TrackException e) {
@@ -65,7 +58,7 @@ public class GalleryActivity extends Activity {
             }
         }
 
-        mContainer = (PagerContainer) findViewById(R.id.pager_container);
+        PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
 
         ViewPager pager = mContainer.getViewPager();
         PagerAdapter adapter = new GalleryAdapter(currentImages);
@@ -95,6 +88,11 @@ public class GalleryActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /** Called when user clicks Scan Devices button */
+    public void enlargeImage(View view) {
+        Log.d(this.getClass().getName(), "Enlarge Image");
+    }
+
     //Nothing special about this adapter, just throwing up colored views for demo
     private class GalleryAdapter extends PagerAdapter {
 
@@ -106,14 +104,9 @@ public class GalleryActivity extends Activity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            //TextView view = new TextView(GalleryActivity.this);
-
             ImageSputnik imageSputnik = images.get(position);
 
-            ImageView jpgView = new ImageView(GalleryActivity.this);
             BitmapFactory.Options options = new BitmapFactory.Options();
-
-            //TextView textView = new TextView(GalleryActivity.this);
 
             ImageText imageText = new ImageText(GalleryActivity.this);
 
@@ -125,16 +118,12 @@ public class GalleryActivity extends Activity {
                     String fullPath = folder.getAbsolutePath() + "/" + imageSputnik.getFilename();
 
                     Bitmap bm = BitmapFactory.decodeFile(fullPath, options);
-                    //jpgView.setImageBitmap(bm);
-                    imageText.getImageView().setImageBitmap(bm);
-                    imageText.getTextView().setText(imageSputnik.getId().toString());
-                    //textView.setText(imageSputnik.getId().toString());
 
-                    //imageText.addView(jpgView);
-                    //imageText.addView(textView);
+                    imageText.getImageView().setImageBitmap(bm);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
+                    imageText.getTextView().setText(imageSputnik.getId().toString() + " - " + sdf.format(imageSputnik.getCreateDate()));
 
                     container.addView(imageText);
-                    //container.addView(jpgView);
                 } catch (ImageException e) {
                     e.printStackTrace();
                 }
@@ -145,7 +134,7 @@ public class GalleryActivity extends Activity {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View)object);
+            container.removeView((View) object);
         }
 
         @Override

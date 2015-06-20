@@ -52,10 +52,6 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
         try {
             mPager = (ViewPager) getChildAt(0);
             mPager.setOnPageChangeListener(this);
-            //imageText = (ImageText) getChildAt(0);
-            //imageText.getImageView().setOnPageChangeListener(this);
-           // imageText.setmOnPageChangeListener(this);
-
         } catch (Exception e) {
             throw new IllegalStateException("The root child of PagerContainer must be a ViewPager");
         }
@@ -63,8 +59,6 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
 
     public ViewPager getViewPager() {
         return mPager;
-        //return imageText;
-        //return imageText.getImageView();
     }
 
     private Point mCenter = new Point();

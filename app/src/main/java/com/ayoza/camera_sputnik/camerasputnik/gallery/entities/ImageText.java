@@ -2,7 +2,9 @@ package com.ayoza.camera_sputnik.camerasputnik.gallery.entities;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,8 +22,6 @@ public class ImageText extends LinearLayout {
     private TextView textView;
 
     private LayoutInflater mInflater;
-
-    //private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
     public ImageText(Context context) {
         super(context);
@@ -64,7 +64,6 @@ public class ImageText extends LinearLayout {
             throw new IllegalStateException("The first child of PagerContainer must be a ViewPager and the second one a TextView");
         }
     }
-
 
     public TextView getTextView() {
         return textView;
