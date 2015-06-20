@@ -24,23 +24,6 @@
             android:id="@+id/my_image"
             android:longClickable="false" />
 
-        <!--
-        <com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText
-            android:id="@+id/imageText"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:layout_gravity="center_horizontal"
-            android:longClickable="false">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/imageLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_centerInParent="true"
-                android:longClickable="false"
-                />
-        </com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText>
-        -->
     </com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer>
 
     <view
