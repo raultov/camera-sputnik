@@ -23,7 +23,6 @@
             android:layout_gravity="center_horizontal"
             android:id="@+id/my_image"
             android:longClickable="false" />
-
     </com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer>
 
     <view
