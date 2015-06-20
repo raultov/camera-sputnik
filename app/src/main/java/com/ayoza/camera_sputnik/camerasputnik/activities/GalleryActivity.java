@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
@@ -32,6 +34,7 @@ import java.util.Locale;
 public class GalleryActivity extends Activity {
 
     private ImageMgr imageMgr;
+    private List<ImageSputnik> currentImages = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,14 +44,12 @@ public class GalleryActivity extends Activity {
 
         imageMgr = ImageMgr.getInstance(this);
 
-        List<ImageSputnik> currentImages = null;
         try {
             // FIXME
             //currentImages = trackMgr.getAllImagesFromCurrentTrack();
             currentImages = trackMgr.getAllImagesFromLastTrack();
         } catch (TrackException e) {
             e.printStackTrace();
-
         }
 
         if (currentImages != null) {
@@ -61,7 +62,7 @@ public class GalleryActivity extends Activity {
         PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
 
         ViewPager pager = mContainer.getViewPager();
-        PagerAdapter adapter = new GalleryAdapter(currentImages);
+        PagerAdapter adapter = new GalleryAdapter();
         pager.setAdapter(adapter);
         //Necessary or the pager will only have one extra page to show
         // make this at least however many pages you can see
@@ -90,21 +91,29 @@ public class GalleryActivity extends Activity {
 
     /** Called when user clicks Scan Devices button */
     public void enlargeImage(View view) {
-        Log.d(this.getClass().getName(), "Enlarge Image");
+
+        ImageSputnik imageSputnik = currentImages.get(view.getId());
+
+        if (imageMgr != null) {
+            try {
+                File folder = imageMgr.getAlbumStorageDir();
+                String fullPath = folder.getAbsolutePath() + "/" + imageSputnik.getFilename();
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                Bitmap bm = BitmapFactory.decodeFile(fullPath, options);
+                ImageView largePicture = (ImageView) findViewById(R.id.pictureLarge);
+                largePicture.setImageBitmap(bm);
+            } catch (ImageException ie) {
+                ie.printStackTrace();
+            }
+        }
     }
 
     //Nothing special about this adapter, just throwing up colored views for demo
     private class GalleryAdapter extends PagerAdapter {
 
-        private List<ImageSputnik> images = null;
-
-        public GalleryAdapter(List<ImageSputnik> images) {
-            this.images = images;
-        }
-
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageSputnik imageSputnik = images.get(position);
+            ImageSputnik imageSputnik = currentImages.get(position);
 
             BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -120,6 +129,7 @@ public class GalleryActivity extends Activity {
                     Bitmap bm = BitmapFactory.decodeFile(fullPath, options);
 
                     imageText.getImageView().setImageBitmap(bm);
+                    imageText.getImageView().setId(position);
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
                     imageText.getTextView().setText(imageSputnik.getId().toString() + " - " + sdf.format(imageSputnik.getCreateDate()));
 
@@ -139,7 +149,7 @@ public class GalleryActivity extends Activity {
 
         @Override
         public int getCount() {
-            return images != null ? images.size() : 0;
+            return currentImages != null ? currentImages.size() : 0;
         }
 
         @Override
