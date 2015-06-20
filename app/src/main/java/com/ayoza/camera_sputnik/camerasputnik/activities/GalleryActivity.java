@@ -30,6 +30,7 @@ import java.util.Locale;
 /**
  * Created by raultov on 26/04/15.
  * This activity shows a gallery of pictures received previously through bluetooth
+ * You can enlarge pictures by clicking on them
  */
 public class GalleryActivity extends Activity {
 
