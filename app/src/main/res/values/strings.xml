@@ -28,5 +28,6 @@
     <string name="start_stop_track">Nuevo Recorrido</string>
     <string name="stop_track">Terminar Recorrido</string>
     <string name="image_text_description">imageText</string>
+    <string name="action_show_dates">Calendario</string>
 
 </resources>

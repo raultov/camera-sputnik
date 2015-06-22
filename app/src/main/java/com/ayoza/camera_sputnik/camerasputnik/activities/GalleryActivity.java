@@ -1,13 +1,12 @@
 package com.ayoza.camera_sputnik.camerasputnik.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ import java.util.Locale;
  * This activity shows a gallery of pictures received previously through bluetooth
  * You can enlarge pictures by clicking on them
  */
-public class GalleryActivity extends Activity {
+public class GalleryActivity extends ActionBarActivity {
 
     private ImageMgr imageMgr;
     private List<ImageSputnik> currentImages = null;
@@ -90,7 +89,7 @@ public class GalleryActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Called when user clicks Scan Devices button */
+    /** Called when user clicks on a picture */
     public void enlargeImage(View view) {
 
         ImageSputnik imageSputnik = currentImages.get(view.getId());
