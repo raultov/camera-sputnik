@@ -51,7 +51,7 @@
         </activity>
         <activity
             android:name=".activities.GalleryActivity"
-            android:label="Connecting screen"
+            android:label=""
             android:parentActivityName=".activities.GalleryActivity"
             android:screenOrientation="portrait" >
             <meta-data

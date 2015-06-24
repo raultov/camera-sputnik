@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.ayoza.camera_sputnik.camerasputnik.GalleryActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_show_dates"
+    tools:context=".GalleryActivity">
+    <item android:id="@+id/show_calendar" android:title="@string/action_show_dates"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>
