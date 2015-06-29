@@ -1,0 +1,21 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.ayoza.camera_sputnik.camerasputnik.CalendarActivity"
+    android:minHeight="1000dp">
+
+    <CalendarView
+        android:id="@+id/calendarID"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/calendar_title"
+        android:maxDate="01/01/2013"
+        android:minDate="09/01/2012"
+        android:showWeekNumber="false"
+        android:minHeight="300dp"
+        />
+
+</RelativeLayout>

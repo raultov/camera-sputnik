@@ -1,5 +1,9 @@
 package com.ayoza.camera_sputnik.camerasputnik.activities;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,11 +11,15 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
@@ -24,6 +32,7 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -120,6 +129,59 @@ public class GalleryActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.show_calendar) {
+            System.out.println("Shows calendar");
+
+            LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
+                    (Context.LAYOUT_INFLATER_SERVICE);
+
+            RelativeLayout ll= (RelativeLayout)inflater.inflate(R.layout.activity_calendar, null, false);
+            CalendarView cv = (CalendarView) ll.getChildAt(0);
+            cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+                @Override
+                public void onSelectedDayChange(CalendarView view, int year, int month,
+                                                int dayOfMonth) {
+                    // TODO Auto-generated method stub
+                    //initScheduleEvent();
+                }
+            });
+            new AlertDialog.Builder(GalleryActivity.this)
+                    .setTitle("Event Calendar")
+                    .setMessage("Click to schedule or view events.")
+                    .setView(ll)
+                   /* .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //do nothing...yet
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Do nothing.
+                        }
+                    })*/
+                    .show();
+
+
+/*
+            final Calendar myCalendar = Calendar.getInstance();
+
+            DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                      int dayOfMonth) {
+                    // TODO Auto-generated method stub
+                    myCalendar.set(Calendar.YEAR, year);
+                    myCalendar.set(Calendar.MONTH, monthOfYear);
+                    myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    //updateLabel();
+                }
+
+            };
+
+            new DatePickerDialog(GalleryActivity.this, date, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+*/
             return true;
         }
 
