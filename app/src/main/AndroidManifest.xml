@@ -58,14 +58,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.GalleryActivity" />
         </activity>
-        <activity
-            android:name=".CalendarActivity"
-            android:label="@string/title_activity_calendar"
-            android:parentActivityName=".activities.GalleryActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ayoza.camera_sputnik.camerasputnik.activities.GalleryActivity" />
-        </activity>
     </application>
 
 </manifest>
