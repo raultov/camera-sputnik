@@ -17,6 +17,7 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.helpers.ConfigurationHelpe
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -255,6 +256,33 @@ public class ConfigurationDao {
         cursor.close();
 
         return trackSputnik;
+    }
+
+    public List<TrackSputnik> getAllTracksFromDay(Date day) {
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM ");
+        query.append("track t ");
+        query.append("WHERE date(t.created_date) = date('?-?-?') ORDER BY t.created_date ASC");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day);
+        String[] selectionArgs = {
+                                    String.valueOf(calendar.get(Calendar.YEAR)) ,
+                                    String.valueOf(calendar.get(Calendar.MONTH) + 1) ,
+                                    String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))
+                                };
+
+        Cursor cursor = database.rawQuery(query.toString(), selectionArgs);
+
+        List<TrackSputnik> list = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(cursorToTrack(cursor));
+            cursor.moveToNext();
+        }
+
+        return list;
     }
 
     public List<ImageSputnik> getImagesFromTrack(Long trackId) {

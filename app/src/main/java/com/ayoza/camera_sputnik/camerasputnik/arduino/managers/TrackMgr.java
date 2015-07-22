@@ -7,6 +7,7 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.PointSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -77,6 +78,10 @@ public class TrackMgr {
 
     public List<ImageSputnik> getAllImagesFromLastTrack() throws TrackException {
         return configurationMgr.getAllImagesFromLastTrack();
+    }
+
+    public List<TrackSputnik> getAllTracksFromDay(Date day) {
+        return configurationMgr.getAllTracksFromDay(day);
     }
     
     public void closeCurrentTrack() {

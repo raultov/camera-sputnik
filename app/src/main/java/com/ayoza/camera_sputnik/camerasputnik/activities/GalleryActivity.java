@@ -33,6 +33,7 @@ import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
+import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -49,13 +50,14 @@ import java.util.Locale;
 public class GalleryActivity extends ActionBarActivity {
 
     private ImageMgr imageMgr;
+    private TrackMgr trackMgr;
     private List<ImageSputnik> currentImages = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        TrackMgr trackMgr = TrackMgr.getInstance(this);
+        trackMgr = TrackMgr.getInstance(this);
 
         imageMgr = ImageMgr.getInstance(this);
 
@@ -159,6 +161,12 @@ public class GalleryActivity extends ActionBarActivity {
 
                             firstTime = false;
 
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(Calendar.YEAR, year);
+                            calendar.set(Calendar.MONTH, monthOfYear);
+                            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                            List<TrackSputnik> tracks = trackMgr.getAllTracksFromDay(calendar.getTime());
+
                             System.out.println(dayOfMonth + "-"
                                     + (monthOfYear + 1) + "-" + year);
 
@@ -169,14 +177,15 @@ public class GalleryActivity extends ActionBarActivity {
                             final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                                     thisActivity,
                                     android.R.layout.select_dialog_singlechoice);
+
                             arrayAdapter.add("Hardik");
                             arrayAdapter.add("Archit");
                             arrayAdapter.add("Jignesh");
                             arrayAdapter.add("Umang");
                             arrayAdapter.add("Gatti");
-                            builderSingle.setNegativeButton("cancel",
-                                    new DialogInterface.OnClickListener() {
 
+                            builderSingle.setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();

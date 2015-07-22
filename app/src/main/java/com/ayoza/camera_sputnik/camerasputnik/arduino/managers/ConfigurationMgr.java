@@ -8,6 +8,7 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.PointSputnik;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -104,6 +105,14 @@ public final class ConfigurationMgr {
         configurationDao.close();
 
         return images;
+    }
+
+    public List<TrackSputnik> getAllTracksFromDay(Date day) {
+        configurationDao.open();
+        List<TrackSputnik> tracks = configurationDao.getAllTracksFromDay(day);
+        configurationDao.close();
+
+        return tracks;
     }
     
     /*
