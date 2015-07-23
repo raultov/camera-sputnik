@@ -260,20 +260,25 @@ public class ConfigurationDao {
 
     public List<TrackSputnik> getAllTracksFromDay(Date day) {
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day);
+
+        String year = String.format("%02d", calendar.get(Calendar.YEAR));
+        String month = String.format("%02d", calendar.get(Calendar.MONTH) + 1);
+        String dayMonth = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH));
+
         StringBuilder query = new StringBuilder();
         query.append("SELECT * FROM ");
         query.append("track t ");
-        query.append("WHERE date(t.created_date) = date('?-?-?') ORDER BY t.created_date ASC");
+        query.append("WHERE date(t.created_date) = date('" + year + "-" + month + "-" + dayMonth + "') ORDER BY t.created_date ASC");
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(day);
         String[] selectionArgs = {
-                                    String.valueOf(calendar.get(Calendar.YEAR)) ,
-                                    String.valueOf(calendar.get(Calendar.MONTH) + 1) ,
-                                    String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))
+                                    String.format("%02d", calendar.get(Calendar.YEAR)) ,
+                                    String.format("%02d", calendar.get(Calendar.MONTH) + 1),
+                                    String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH))
                                 };
 
-        Cursor cursor = database.rawQuery(query.toString(), selectionArgs);
+        Cursor cursor = database.rawQuery(query.toString(), null);
 
         List<TrackSputnik> list = new ArrayList<>();
         cursor.moveToFirst();
