@@ -1,6 +1,7 @@
 package com.ayoza.camera_sputnik.camerasputnik.storage.entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,5 +44,12 @@ public class TrackSputnik implements Serializable {
         }
 
         pointSputniks.add(pointSputnik);
+    }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        return date != null ? sdf.format(date) : null;
     }
 }

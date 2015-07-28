@@ -221,7 +221,7 @@ public final class BluetoothMgr {
                             if (!pairedDeviceExists) {
                                 // insert device in DB if there is no device still inserted
                                 BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
-                                bDeviceSputnik.setName(device.getName() == null ? "" : device.getName());
+                                bDeviceSputnik.setName(device.getName() == null ? device.getAddress() : device.getName());
                                 bDeviceSputnik.setMac(device.getAddress());
                                 bDeviceSputnik.setPaired(true);
                                 configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);
@@ -313,7 +313,7 @@ public final class BluetoothMgr {
                     if (!pairedDeviceExists) {
                         // insert device in DB if there is no device still inserted
                         BDeviceSputnik bDeviceSputnik = new BDeviceSputnik();
-                        bDeviceSputnik.setName(deviceConnected.getName() == null ? "" : deviceConnected.getName());
+                        bDeviceSputnik.setName(deviceConnected.getName() == null ? deviceConnected.getAddress() : deviceConnected.getName());
                         bDeviceSputnik.setMac(deviceConnected.getAddress());
                         bDeviceSputnik.setPaired(true);
                         configurationMgr.insertPairedBluetoothDevice(bDeviceSputnik);

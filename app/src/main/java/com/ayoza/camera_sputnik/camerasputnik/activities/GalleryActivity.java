@@ -2,28 +2,22 @@ package com.ayoza.camera_sputnik.camerasputnik.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
@@ -38,7 +32,6 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -155,7 +148,7 @@ public class GalleryActivity extends ActionBarActivity {
                                               int monthOfYear, int dayOfMonth) {
 
                             if (!firstTime) {
-                                // just to avoid show date picker more than once with same click
+                                // just to avoid showing date picker more than once with same click
                                 return;
                             }
 
@@ -173,16 +166,14 @@ public class GalleryActivity extends ActionBarActivity {
                             AlertDialog.Builder builderSingle = new AlertDialog.Builder(
                                     thisActivity);
                             builderSingle.setIcon(R.drawable.ic_launcher);
-                            builderSingle.setTitle("Select One Name:-");
-                            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                            builderSingle.setTitle("Select One Track:-");
+                            final ArrayAdapter<TrackSputnik> arrayAdapter = new ArrayAdapter<TrackSputnik>(
                                     thisActivity,
                                     android.R.layout.select_dialog_singlechoice);
 
-                            arrayAdapter.add("Hardik");
-                            arrayAdapter.add("Archit");
-                            arrayAdapter.add("Jignesh");
-                            arrayAdapter.add("Umang");
-                            arrayAdapter.add("Gatti");
+                            for (TrackSputnik trackSputnik : tracks) {
+                                arrayAdapter.add(trackSputnik);
+                            }
 
                             builderSingle.setNegativeButton("Cancel",
                                     new DialogInterface.OnClickListener() {
@@ -197,7 +188,7 @@ public class GalleryActivity extends ActionBarActivity {
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            String strName = arrayAdapter.getItem(which);
+                                            String strName = arrayAdapter.getItem(which).toString();
                                             /*AlertDialog.Builder builderInner = new AlertDialog.Builder(
                                                     thisActivity);
                                             builderInner.setMessage(strName);
