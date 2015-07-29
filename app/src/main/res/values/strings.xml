@@ -31,5 +31,10 @@
     <string name="action_show_dates">Calendario</string>
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="calendar_title" />
+    <string name="GalleryActivity_no_track_saved">Still no track has been saved</string>
+    <string name="GalleryActivity_no_track_found_in_day">No track found in selected day</string>
+    <string name="GalleryActivity_no_image_in_selected_track">No image found in selected track</string>
+    <string name="GalleryActivity_select_one_track">Select one track:</string>
+    <string name="GalleryActivity_cancel">Cancel</string>
 
 </resources>

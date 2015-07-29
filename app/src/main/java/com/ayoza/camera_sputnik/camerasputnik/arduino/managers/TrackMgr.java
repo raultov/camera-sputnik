@@ -76,8 +76,12 @@ public class TrackMgr {
         return configurationMgr.getAllImagesFromTrack(currentTrack.getIdTrackSputnik());
     }
 
-    public List<ImageSputnik> getAllImagesFromLastTrack() throws TrackException {
+    public List<ImageSputnik> getAllImagesFromLastTrack() {
         return configurationMgr.getAllImagesFromLastTrack();
+    }
+
+    public List<ImageSputnik> getAllImagesFromGivenTrack(Long trackId) {
+        return configurationMgr.getAllImagesFromTrack(trackId);
     }
 
     public List<TrackSputnik> getAllTracksFromDay(Date day) {

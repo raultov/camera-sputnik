@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,12 +19,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.ImageException;
-import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
@@ -45,6 +46,8 @@ public class GalleryActivity extends ActionBarActivity {
     private ImageMgr imageMgr;
     private TrackMgr trackMgr;
     private List<ImageSputnik> currentImages = null;
+    private PagerAdapter adapter = null;
+    private PagerContainer mContainer = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,25 +57,21 @@ public class GalleryActivity extends ActionBarActivity {
 
         imageMgr = ImageMgr.getInstance(this);
 
-        try {
-            // FIXME
-            //currentImages = trackMgr.getAllImagesFromCurrentTrack();
-            currentImages = trackMgr.getAllImagesFromLastTrack();
-        } catch (TrackException e) {
-            e.printStackTrace();
+        mContainer = (PagerContainer) findViewById(R.id.pager_container);
+
+        // FIXME
+        //currentImages = trackMgr.getAllImagesFromCurrentTrack()
+        currentImages = trackMgr.getAllImagesFromLastTrack();
+
+        if (currentImages.size() == 0) {
+            Resources res = getResources();
+            Toast toast = Toast.makeText(this, res.getString(R.string.GalleryActivity_no_track_saved), Toast.LENGTH_SHORT);
+            toast.show();
         }
-
-        if (currentImages != null) {
-            for (ImageSputnik image : currentImages) {
-
-                System.out.println("image filename: " + image.getFilename());
-            }
-        }
-
-        PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
 
         ViewPager pager = mContainer.getViewPager();
-        PagerAdapter adapter = new GalleryAdapter();
+        adapter = new GalleryAdapter();
+        adapter.startUpdate(mContainer);
         pager.setAdapter(adapter);
         //Necessary or the pager will only have one extra page to show
         // make this at least however many pages you can see
@@ -160,13 +159,18 @@ public class GalleryActivity extends ActionBarActivity {
                             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                             List<TrackSputnik> tracks = trackMgr.getAllTracksFromDay(calendar.getTime());
 
-                            System.out.println(dayOfMonth + "-"
-                                    + (monthOfYear + 1) + "-" + year);
+                            if (tracks.size() == 0) {
+                                Resources res = getResources();
+                                Toast toast = Toast.makeText(thisActivity, res.getString(R.string.GalleryActivity_no_track_found_in_day), Toast.LENGTH_SHORT);
+                                toast.show();
+                                return;
+                            }
 
                             AlertDialog.Builder builderSingle = new AlertDialog.Builder(
                                     thisActivity);
                             builderSingle.setIcon(R.drawable.ic_launcher);
-                            builderSingle.setTitle("Select One Track:-");
+                            Resources res = getResources();
+                            builderSingle.setTitle(res.getString(R.string.GalleryActivity_select_one_track));
                             final ArrayAdapter<TrackSputnik> arrayAdapter = new ArrayAdapter<TrackSputnik>(
                                     thisActivity,
                                     android.R.layout.select_dialog_singlechoice);
@@ -175,7 +179,7 @@ public class GalleryActivity extends ActionBarActivity {
                                 arrayAdapter.add(trackSputnik);
                             }
 
-                            builderSingle.setNegativeButton("Cancel",
+                            builderSingle.setNegativeButton(res.getString(R.string.GalleryActivity_cancel),
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -183,29 +187,27 @@ public class GalleryActivity extends ActionBarActivity {
                                         }
                                     });
 
-                            builderSingle.setAdapter(arrayAdapter,
-                                    new DialogInterface.OnClickListener() {
+                            builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            String strName = arrayAdapter.getItem(which).toString();
-                                            /*AlertDialog.Builder builderInner = new AlertDialog.Builder(
-                                                    thisActivity);
-                                            builderInner.setMessage(strName);
-                                            builderInner.setTitle("Your Selected Item is");
-                                            builderInner.setPositiveButton("Ok",
-                                                    new DialogInterface.OnClickListener() {
+                                            TrackSputnik selectedTrack = arrayAdapter.getItem(which);
 
-                                                        @Override
-                                                        public void onClick(
-                                                                DialogInterface dialog,
-                                                                int which) {
-                                                            dialog.dismiss();
-                                                        }
-                                                    });
-                                            builderInner.show();
-                                            */
-                                            System.out.println(strName);
+                                            currentImages = trackMgr.getAllImagesFromGivenTrack(selectedTrack.getIdTrackSputnik());
+
+                                            if (currentImages.size() == 0) {
+                                                Resources res = getResources();
+                                                Toast toast = Toast.makeText(thisActivity, res.getString(R.string.GalleryActivity_no_image_in_selected_track), Toast.LENGTH_SHORT);
+                                                toast.show();
+                                            }
+
+                                            // clear current enlarged image
+                                            ImageView largePicture = (ImageView) findViewById(R.id.pictureLarge);
+                                            largePicture.setImageResource(0);
+
+                                            adapter.notifyDataSetChanged();
+
+                                            System.out.println(selectedTrack);
                                         }
                                     });
                             builderSingle.show();
@@ -267,6 +269,11 @@ public class GalleryActivity extends ActionBarActivity {
         @Override
         public boolean isViewFromObject(View view, Object object) {
             return (view == object);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
     }
 }

@@ -103,7 +103,7 @@ public class ConfigurationDao {
     }
 
     public List<BDeviceSputnik> getAllBluetoothDevices() {
-        List<BDeviceSputnik> devices = new ArrayList<BDeviceSputnik>();
+        List<BDeviceSputnik> devices = new ArrayList<>();
 
         Cursor cursor = database.query(ConfigurationHelper.TABLE_BLUETOOTH_DEVICE,
                 allColumnsBluetoothDevice, null, null, null, null, null);
