@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -22,8 +23,10 @@ import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
+import com.ayoza.camera_sputnik.camerasputnik.restclient.RestClient;
 
 import android.os.Handler;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -40,6 +43,7 @@ public class MainActivity extends ActionBarActivity {
     private BroadcastReceiver mMessageReceiver;
     private ProgressBar downloadBar = null;
     private TrackMgr trackMgr;
+    private RestClient restClient;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
 
         bluetoothMgr = BluetoothMgr.getInstance(this);
         trackMgr = TrackMgr.getInstance(this);
+        restClient = RestClient.getInstance();
 
         if (!bluetoothMgr.isBluetoothEnabled()) {
             bluetoothMgr.showBluetoothTurnOnRequest(this);
@@ -211,9 +216,7 @@ public class MainActivity extends ActionBarActivity {
     /** Called when user clicks Scan Devices button */
     public void showGallery(View view) {
         Log.d(MainActivity.class.getSimpleName(), "Showing photo gallery");
-
         Intent intent = new Intent(this, GalleryActivity.class);
-
         startActivityForResult(intent, 0);
     }
     
@@ -222,12 +225,20 @@ public class MainActivity extends ActionBarActivity {
             try {
                 // open new track
                 trackMgr.startNewTrack();
+
+                // start uploading track
+                restClient.startUploading(trackMgr.getCurrentTrack());
             } catch (TrackException e) {
-                // TODO inform with toast that a new track could not be open
+                Resources res = getResources();
+                Toast toast = Toast.makeText(this, res.getString(R.string.MainActivity_current_track_already_open), Toast.LENGTH_SHORT);
+                toast.show();
             }
         } else {
             // close current track
             trackMgr.closeCurrentTrack();
+
+            // stop uploading track
+            // TOÖ
         }
     }
 

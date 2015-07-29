@@ -95,4 +95,8 @@ public class TrackMgr {
     public boolean isThereCurrentTrack() {
         return currentTrack != null;
     }
+
+    public TrackSputnik getCurrentTrack() {
+        return currentTrack;
+    }
 }

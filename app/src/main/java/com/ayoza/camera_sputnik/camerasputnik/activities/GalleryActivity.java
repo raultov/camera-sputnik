@@ -25,6 +25,7 @@ import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.ImageMgr;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.ImageException;
+import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.ImageText;
 import com.ayoza.camera_sputnik.camerasputnik.gallery.entities.PagerContainer;
 import com.ayoza.camera_sputnik.camerasputnik.storage.entities.ImageSputnik;
@@ -47,7 +48,6 @@ public class GalleryActivity extends ActionBarActivity {
     private TrackMgr trackMgr;
     private List<ImageSputnik> currentImages = null;
     private PagerAdapter adapter = null;
-    private PagerContainer mContainer = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,13 +57,16 @@ public class GalleryActivity extends ActionBarActivity {
 
         imageMgr = ImageMgr.getInstance(this);
 
-        mContainer = (PagerContainer) findViewById(R.id.pager_container);
+        PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
 
-        // FIXME
-        //currentImages = trackMgr.getAllImagesFromCurrentTrack()
-        currentImages = trackMgr.getAllImagesFromLastTrack();
+        try {
+            currentImages = trackMgr.getAllImagesFromCurrentTrack();
+        } catch (TrackException e) {
+            currentImages = null;
+        }
+        //currentImages = trackMgr.getAllImagesFromLastTrack();
 
-        if (currentImages.size() == 0) {
+        if (currentImages == null || currentImages.size() == 0) {
             Resources res = getResources();
             Toast toast = Toast.makeText(this, res.getString(R.string.GalleryActivity_no_track_saved), Toast.LENGTH_SHORT);
             toast.show();
@@ -171,7 +174,7 @@ public class GalleryActivity extends ActionBarActivity {
                             builderSingle.setIcon(R.drawable.ic_launcher);
                             Resources res = getResources();
                             builderSingle.setTitle(res.getString(R.string.GalleryActivity_select_one_track));
-                            final ArrayAdapter<TrackSputnik> arrayAdapter = new ArrayAdapter<TrackSputnik>(
+                            final ArrayAdapter<TrackSputnik> arrayAdapter = new ArrayAdapter<>(
                                     thisActivity,
                                     android.R.layout.select_dialog_singlechoice);
 

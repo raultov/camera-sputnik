@@ -36,5 +36,6 @@
     <string name="GalleryActivity_no_image_in_selected_track">No image found in selected track</string>
     <string name="GalleryActivity_select_one_track">Select one track:</string>
     <string name="GalleryActivity_cancel">Cancel</string>
+    <string name="MainActivity_current_track_already_open">Could not create new track. There is one already active.</string>
 
 </resources>
