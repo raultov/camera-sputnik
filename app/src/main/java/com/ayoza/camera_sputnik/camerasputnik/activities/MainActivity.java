@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.ayoza.camera_sputnik.camerasputnik.R;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.BluetoothMgr;
 import com.ayoza.camera_sputnik.camerasputnik.arduino.managers.TrackMgr;
+import com.ayoza.camera_sputnik.camerasputnik.exceptions.RestException;
 import com.ayoza.camera_sputnik.camerasputnik.exceptions.TrackException;
 import com.ayoza.camera_sputnik.camerasputnik.restclient.RestClient;
 
@@ -54,7 +55,7 @@ public class MainActivity extends ActionBarActivity {
 
         bluetoothMgr = BluetoothMgr.getInstance(this);
         trackMgr = TrackMgr.getInstance(this);
-        restClient = RestClient.getInstance();
+        restClient = RestClient.getInstance(this);
 
         if (!bluetoothMgr.isBluetoothEnabled()) {
             bluetoothMgr.showBluetoothTurnOnRequest(this);
@@ -232,13 +233,15 @@ public class MainActivity extends ActionBarActivity {
                 Resources res = getResources();
                 Toast toast = Toast.makeText(this, res.getString(R.string.MainActivity_current_track_already_open), Toast.LENGTH_SHORT);
                 toast.show();
+            } catch (RestException re) {
+                throw new RuntimeException(re.getMessage());
             }
         } else {
             // close current track
             trackMgr.closeCurrentTrack();
 
             // stop uploading track
-            // TOÖ
+            restClient.stopUploading();
         }
     }
 
