@@ -10,6 +10,8 @@ import com.ayoza.camera_sputnik.camerasputnik.storage.entities.TrackSputnik;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+
 /**
  * This class manages communications between Android Application and Rest Server.
  * This is a Rest Client.
@@ -86,7 +88,7 @@ public class RestClient {
                 }
 
                 // TODO upload points
-                
+
             }
 
             return null;
